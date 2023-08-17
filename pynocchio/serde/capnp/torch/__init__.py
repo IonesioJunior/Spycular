@@ -7,5 +7,7 @@ from .serde import tensor_deserialize, tensor_serialize
 
 def load_torch_serde():
     recursive_serde_register(
-        th.Tensor, serialize=tensor_serialize, deserialize=tensor_deserialize
+        th.Tensor,
+        serialize=tensor_serialize,
+        deserialize=tensor_deserialize,
     )

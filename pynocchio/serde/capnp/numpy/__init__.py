@@ -9,7 +9,9 @@ from .serde import numpy_deserialize, numpy_serialize
 
 def load_numpy_serde():
     recursive_serde_register(
-        np.ndarray, serialize=numpy_serialize, deserialize=numpy_deserialize
+        np.ndarray,
+        serialize=numpy_serialize,
+        deserialize=numpy_deserialize,
     )
 
     recursive_serde_register(

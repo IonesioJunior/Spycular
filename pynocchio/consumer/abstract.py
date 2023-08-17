@@ -28,7 +28,10 @@ class AbstractConsumer(ABC):
         store_obj = self.storage.get(msg.obj_id)
         try:
             return self.reverse_lib.action_call(
-                store_obj, msg.path, msg.args, msg.kwargs
+                store_obj,
+                msg.path,
+                msg.args,
+                msg.kwargs,
             )
         except Exception as e:
             print("Error message in : ", msg)

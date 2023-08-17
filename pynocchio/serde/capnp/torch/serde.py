@@ -33,7 +33,9 @@ def arrow_serialize(tensor: th.Tensor) -> bytes:
 
 
 def arrow_deserialize(
-    numpy_bytes: bytes, decompressed_size: int, dtype: str
+    numpy_bytes: bytes,
+    decompressed_size: int,
+    dtype: str,
 ) -> th.Tensor:
     original_dtype = np.dtype(dtype)
     numpy_bytes = pa.decompress(

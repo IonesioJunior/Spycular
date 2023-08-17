@@ -22,7 +22,9 @@ def serializable(cls):
     """Decorator to make a class serializable"""
     exclude = getattr(cls, "__exclude__", [])
     recursive_serde_register(
-        cls, serialize_attrs=list(cls.__annotations__.keys()), exclude_attrs=exclude
+        cls,
+        serialize_attrs=list(cls.__annotations__.keys()),
+        exclude_attrs=exclude,
     )
     return cls
 
@@ -226,7 +228,7 @@ def rs_object2proto(self: Any, for_hashing: bool = False) -> _DynamicStructBuild
     for idx, attr_name in enumerate(sorted(attribute_list)):
         if not hasattr(self, attr_name):
             raise ValueError(
-                f"{attr_name} on {type(self)} does not exist, serialization aborted!"
+                f"{attr_name} on {type(self)} does not exist, serialization aborted!",
             )
 
         field_obj = getattr(self, attr_name)

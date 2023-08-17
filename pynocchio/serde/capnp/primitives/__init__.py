@@ -26,7 +26,9 @@ def load_primitives_serde():
     recursive_serde_register(
         int,
         serialize=lambda x: x.to_bytes(
-            (x.bit_length() + 7) // 8 + 1, "big", signed=True
+            (x.bit_length() + 7) // 8 + 1,
+            "big",
+            signed=True,
         ),
         deserialize=lambda x_bytes: int.from_bytes(x_bytes, "big", signed=True),
     )
@@ -130,7 +132,9 @@ def load_primitives_serde():
     )
 
     recursive_serde_register(
-        type, serialize=serialize_type, deserialize=deserialize_type
+        type,
+        serialize=serialize_type,
+        deserialize=deserialize_type,
     )
     recursive_serde_register(
         MappingProxyType,
