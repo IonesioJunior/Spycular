@@ -34,7 +34,7 @@ repos:
 
   - id: black
     name: Format with Black
-    entry: poetry run black
+    entry: poetry run black --line-length 79
     language: system
     types: [python]
 

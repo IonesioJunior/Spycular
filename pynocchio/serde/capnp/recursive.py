@@ -15,7 +15,8 @@ from .util import get_capnp_schema
 TYPE_BANK = {}
 
 recursive_scheme = get_capnp_schema(
-    "recursive_serde.capnp").RecursiveSerde  # type: ignore
+    "recursive_serde.capnp",
+).RecursiveSerde  # type: ignore
 
 
 def serializable(cls):
@@ -53,7 +54,8 @@ def get_fully_qualified_name(obj: object) -> str:
 
 
 def get_types(
-    cls: Type, keys: Optional[List[str]] = None
+    cls: Type,
+    keys: Optional[List[str]] = None,
 ) -> Optional[List[Type]]:
     if keys is None:
         return None
@@ -185,7 +187,8 @@ def combine_bytes(capnp_list: List[bytes]) -> bytes:
 
 
 def rs_object2proto(
-    self: Any, for_hashing: bool = False
+    self: Any,
+    for_hashing: bool = False,
 ) -> _DynamicStructBuilder:
     is_type = False
     if isinstance(self, type):
@@ -246,7 +249,9 @@ def rs_object2proto(
             continue
 
         serialized = _serialize(
-            field_obj, to_bytes=True, for_hashing=for_hashing
+            field_obj,
+            to_bytes=True,
+            for_hashing=for_hashing,
         )
         msg.fieldsName[idx] = attr_name
         chunk_bytes(serialized, idx, msg.fieldsData)
@@ -276,12 +281,13 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
     if klass != "NoneType":
         try:
             class_type = index_syft_by_module_name(
-                proto.fullyQualifiedName
+                proto.fullyQualifiedName,
             )  # type: ignore
         except Exception:  # nosec
             try:
                 class_type = getattr(
-                    sys.modules[".".join(module_parts)], klass
+                    sys.modules[".".join(module_parts)],
+                    klass,
                 )
             except Exception:  # nosec
                 if "syft.user" in proto.fullyQualifiedName:
@@ -292,7 +298,8 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
                         load_user_code()
                 try:
                     class_type = getattr(
-                        sys.modules[".".join(module_parts)], klass
+                        sys.modules[".".join(module_parts)],
+                        klass,
                     )
                 except Exception:  # nosec
                     pass
@@ -318,8 +325,10 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
 
     if nonrecursive:
         if deserialize is None:
-            raise Exception(f"Cant serialize {type(proto)} \
-            nonrecursive without serialize.")
+            raise Exception(
+                f"Cant serialize {type(proto)} \
+            nonrecursive without serialize."
+            )
 
         return deserialize(combine_bytes(proto.nonrecursiveBlob))
 

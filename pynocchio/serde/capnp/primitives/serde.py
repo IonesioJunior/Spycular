@@ -11,7 +11,8 @@ from ..util import get_capnp_schema
 
 iterable_schema = get_capnp_schema("iterable.capnp").Iterable  # type: ignore
 kv_iterable_schema = get_capnp_schema(
-    "kv_iterable.capnp").KVIterable  # type: ignore
+    "kv_iterable.capnp",
+).KVIterable  # type: ignore
 
 
 def serialize_iterable(iterable: Collection) -> bytes:
@@ -42,7 +43,7 @@ def deserialize_iterable(iterable_type: type, blob: bytes) -> Collection:
     ) as msg:
         for element in msg.values:
             values.append(
-                _deserialize(combine_bytes(element), from_bytes=True)
+                _deserialize(combine_bytes(element), from_bytes=True),
             )
 
     return iterable_type(values)

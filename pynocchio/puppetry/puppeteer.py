@@ -61,7 +61,7 @@ class Puppeteer:
                     )
                 # Member is module or starts with __ (to avoid python vars)
                 elif not name.startswith("__") and not inspect.ismodule(
-                    member
+                    member,
                 ):
                     if callable(member):
                         vars(self)[name] = Puppeteer.inject_callable_member(
@@ -92,7 +92,10 @@ class Puppeteer:
 
     @staticmethod
     def placeholder_class(
-        cls, parent_path, broker, processed_classes
+        cls,
+        parent_path,
+        broker,
+        processed_classes,
     ) -> ClassPointer:
         return ClassPointer(path=parent_path, broker=broker)
 
@@ -103,7 +106,9 @@ class Puppeteer:
 
             def placeholder_function(*args, **kwargs):
                 function_pointer = FunctionPointer(
-                    path=path, args=args, kwargs=kwargs
+                    path=path,
+                    args=args,
+                    kwargs=kwargs,
                 )
                 broker.send(function_pointer)
                 return ObjectPointer(
@@ -117,7 +122,9 @@ class Puppeteer:
 
             def placeholder_method(*args, **kwargs):
                 method_pointer = MethodPointer(
-                    path=path, args=args, kwargs=kwargs
+                    path=path,
+                    args=args,
+                    kwargs=kwargs,
                 )
                 broker.send(method_pointer)
                 return ObjectPointer(
@@ -131,7 +138,9 @@ class Puppeteer:
 
             def placeholder_builtin(*args, **kwargs):
                 builtin_pointer = BuiltinPointer(
-                    path=path, args=args, kwargs=kwargs
+                    path=path,
+                    args=args,
+                    kwargs=kwargs,
                 )
                 broker.send(builtin_pointer)
                 return ObjectPointer(
@@ -147,7 +156,10 @@ class Puppeteer:
     @staticmethod
     def placeholder_module(member, path, modules, broker) -> Puppeteer:
         return Puppeteer(
-            lib=member, modules=modules, parent_path=path, broker=broker
+            lib=member,
+            modules=modules,
+            parent_path=path,
+            broker=broker,
         )
 
     @staticmethod

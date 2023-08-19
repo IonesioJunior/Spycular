@@ -31,7 +31,9 @@ def load_primitives_serde():
             signed=True,
         ),
         deserialize=lambda x_bytes: int.from_bytes(
-            x_bytes, "big", signed=True
+            x_bytes,
+            "big",
+            signed=True,
         ),
     )
 
@@ -42,7 +44,9 @@ def load_primitives_serde():
     )
 
     recursive_serde_register(
-        bytes, serialize=lambda x: x, deserialize=lambda x: x
+        bytes,
+        serialize=lambda x: x,
+        deserialize=lambda x: x,
     )
 
     recursive_serde_register(

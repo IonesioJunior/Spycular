@@ -48,7 +48,8 @@ def arrow_serialize(obj: np.ndarray) -> bytes:
     dtype = original_dtype.name
 
     return cast(
-        bytes, _serialize((numpy_bytes, buffer.size, dtype), to_bytes=True)
+        bytes,
+        _serialize((numpy_bytes, buffer.size, dtype), to_bytes=True),
     )
 
 
@@ -145,5 +146,5 @@ def numpy_deserialize(buf: bytes) -> np.ndarray:
         return numpyutf8toarray(deser)
     else:
         raise ValueError(
-            f"Invalid type:{type(deser)} for numpy deserialization"
+            f"Invalid type:{type(deser)} for numpy deserialization",
         )
