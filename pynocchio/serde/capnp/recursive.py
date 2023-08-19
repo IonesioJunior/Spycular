@@ -327,7 +327,7 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
         if deserialize is None:
             raise Exception(
                 f"Cant serialize {type(proto)} \
-            nonrecursive without serialize."
+            nonrecursive without serialize.",
             )
 
         return deserialize(combine_bytes(proto.nonrecursiveBlob))

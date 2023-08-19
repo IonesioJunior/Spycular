@@ -54,7 +54,10 @@ def test_create_array(np, consumer, replies):
     array_ptr.retrieve()
     consumer.listen()
     ptr_result = replies[array_ptr.id]
-    assert local_numpy.array_equal(local_numpy.array([1, 2, 3, 4, 5]), ptr_result)
+    assert local_numpy.array_equal(
+        local_numpy.array([1, 2, 3, 4, 5]),
+        ptr_result,
+    )
 
 
 def test_create_array_dtype(np, consumer, replies):
@@ -85,7 +88,10 @@ def test_array_shape(np, consumer, replies):
     shape_ptr.retrieve()
     consumer.listen()
     ptr_result = replies[shape_ptr.id]
-    assert ptr_result == local_numpy.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]).shape
+    assert (
+        ptr_result
+        == local_numpy.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]).shape
+    )
 
 
 def test_array_itemsize(np, consumer, replies):
@@ -94,7 +100,10 @@ def test_array_itemsize(np, consumer, replies):
     shape_ptr.retrieve()
     consumer.listen()
     ptr_result = replies[shape_ptr.id]
-    assert ptr_result == local_numpy.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]).itemsize
+    assert (
+        ptr_result
+        == local_numpy.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]).itemsize
+    )
 
 
 def test_array_dim(np, consumer, replies):
@@ -103,7 +112,10 @@ def test_array_dim(np, consumer, replies):
     shape_ptr.retrieve()
     consumer.listen()
     ptr_result = replies[shape_ptr.id]
-    assert ptr_result == local_numpy.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]).ndim
+    assert (
+        ptr_result
+        == local_numpy.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]).ndim
+    )
 
 
 def test_array_size(np, consumer, replies):
@@ -112,7 +124,10 @@ def test_array_size(np, consumer, replies):
     shape_ptr.retrieve()
     consumer.listen()
     ptr_result = replies[shape_ptr.id]
-    assert ptr_result == local_numpy.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]).size
+    assert (
+        ptr_result
+        == local_numpy.array([[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]).size
+    )
 
 
 def test_array_reshape(np, consumer, replies):
@@ -435,7 +450,10 @@ def test_delete_array(np, consumer, replies):
     new_deleted_result_ptr = np.delete(new_array_ptr, np.s_[::2])
 
     new_local_array = local_numpy.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    new_deleted_result_local = local_numpy.delete(new_local_array, local_numpy.s_[::2])
+    new_deleted_result_local = local_numpy.delete(
+        new_local_array,
+        local_numpy.s_[::2],
+    )
 
     split_array_ptr.retrieve()
     split_array_1_ptr.retrieve()
@@ -458,12 +476,18 @@ def test_array_unique(np, consumer, replies):
 
     local_array = local_numpy.array([5, 2, 6, 2, 7, 5, 6, 8, 2, 9])
     local_array_unique_ptr = local_numpy.unique(local_array)
-    local_array_unique_index_ptr = local_numpy.unique(local_array, return_index=True)
+    local_array_unique_index_ptr = local_numpy.unique(
+        local_array,
+        return_index=True,
+    )
     local_array_unique_inverse_ptr = local_numpy.unique(
         local_array,
         return_inverse=True,
     )
-    local_array_unique_counts_ptr = local_numpy.unique(local_array, return_counts=True)
+    local_array_unique_counts_ptr = local_numpy.unique(
+        local_array,
+        return_counts=True,
+    )
 
     unique_ptr.retrieve()
     unique_index_ptr.retrieve()
