@@ -10,17 +10,27 @@ class Puppet:
         self._original_module = lib
 
     def execute(
-        self, pointer: Pointer, storage: AbstractStore, reply_callback: Callable
+        self,
+        pointer: Pointer,
+        storage: AbstractStore,
+        reply_callback: Callable,
     ) -> None:
         pointer.args, pointer.kwargs = self._resolve_pointer_args(
-            pointer, storage, reply_callback
+            pointer,
+            storage,
+            reply_callback,
         )
         result = pointer.solve(
-            lib=self._original_module, storage=storage, reply_callback=reply_callback
+            lib=self._original_module,
+            storage=storage,
+            reply_callback=reply_callback,
         )
 
     def _resolve_pointer_args(
-        self, pointer: Pointer, storage: AbstractStore, reply_callback: Callable
+        self,
+        pointer: Pointer,
+        storage: AbstractStore,
+        reply_callback: Callable,
     ) -> Tuple[Tuple[Any, ...], Dict[str, Any]]:
         args = []
         for arg in getattr(pointer, "args", []):
@@ -31,14 +41,16 @@ class Puppet:
                         self._original_module,
                         storage=storage,
                         reply_callback=reply_callback,
-                    )
+                    ),
                 )
             elif isinstance(arg, Iterable):
                 new_args = []
                 for argument in arg:
                     if isinstance(argument, Pointer):  # if arg is a pointer
                         local_args, local_kwargs = self._resolve_pointer_args(
-                            argument, storage, reply_callback
+                            argument,
+                            storage,
+                            reply_callback,
                         )
                         argument.args = local_args
                         argument.kwargs = local_kwargs

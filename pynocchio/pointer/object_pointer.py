@@ -118,7 +118,10 @@ class ObjectPointer(Pointer):
             )
         else:
             obj_action = ObjectActionPointer(
-                target_id=self.id, path="__setitem__", args=(key, value), parents=[self]
+                target_id=self.id,
+                path="__setitem__",
+                args=(key, value),
+                parents=[self],
             )
         self.broker.send(obj_action)
         obj = ObjectPointer(

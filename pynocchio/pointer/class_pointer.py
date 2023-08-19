@@ -14,7 +14,10 @@ class ClassPointer(Pointer):
         return None
 
     def solve(
-        self, lib: ModuleType, storage: AbstractStore, reply_callback: Callable
+        self,
+        lib: ModuleType,
+        storage: AbstractStore,
+        reply_callback: Callable,
     ) -> Union[None, Any]:
         if storage.has(self.id):
             return storage.get(self.id)

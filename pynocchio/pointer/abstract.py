@@ -16,6 +16,9 @@ class Pointer(metaclass=ABCMeta):
 
     @abstractmethod
     def solve(
-        self, lib: ModuleType, storage: AbstractStore, reply_callback: Callable
+        self,
+        lib: ModuleType,
+        storage: AbstractStore,
+        reply_callback: Callable,
     ) -> Union[None, Any]:
         pass

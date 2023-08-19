@@ -43,30 +43,41 @@ class Puppeteer:
                 ):
                     # self.callable_members.add((name, member))
                     vars(self)[name] = Puppeteer.inject_callable_member(
-                        member, current_path, self.broker
+                        member,
+                        current_path,
+                        self.broker,
                     )
                 # If member is a class and not already in class members
                 elif inspect.isclass(member) and member not in self.class_members:
                     # self.class_members.add((name, member))
                     vars(self)[name] = Puppeteer.placeholder_class(
-                        member, current_path, self.broker, self.class_members
+                        member,
+                        current_path,
+                        self.broker,
+                        self.class_members,
                     )
                 # If the member is not another module or starts with __ (to avoid pytohn env variables)
                 elif not name.startswith("__") and not inspect.ismodule(member):
                     if callable(member):
                         vars(self)[name] = Puppeteer.inject_callable_member(
-                            member, current_path, self.broker
+                            member,
+                            current_path,
+                            self.broker,
                         )
                     else:
                         self.variable_members.append((name, member))
                         vars(self)[name] = Puppeteer.placeholder_variable(
-                            current_path, self.broker
+                            current_path,
+                            self.broker,
                         )
                 # If the member is another module
                 elif inspect.ismodule(member) and member not in self.modules:
                     # self.modules.add((name, member))
                     vars(self)[name] = Puppeteer.placeholder_module(
-                        member, current_path, self.modules, self.broker
+                        member,
+                        current_path,
+                        self.modules,
+                        self.broker,
                     )
                 # If isn't anything above
                 else:

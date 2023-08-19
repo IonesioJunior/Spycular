@@ -11,7 +11,9 @@ class VirtualConsumer(AbstractConsumer):
         while len(self.message_queue):
             ptr = self.message_queue.pop(0)
             self.puppet_module.execute(
-                pointer=ptr, storage=self.storage, reply_callback=self.reply
+                pointer=ptr,
+                storage=self.storage,
+                reply_callback=self.reply,
             )
 
     def reply(self, obj_id, obj):

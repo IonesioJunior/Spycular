@@ -21,7 +21,10 @@ class CallablePointer(Pointer):
         return f"<CallablePointer {self.id}  path={self.path} args={self.args}  kwargs={self.kwargs}>"
 
     def solve(
-        self, lib: ModuleType, storage: AbstractStore, reply_callback: Callable
+        self,
+        lib: ModuleType,
+        storage: AbstractStore,
+        reply_callback: Callable,
     ) -> Union[None, Any]:
         obj = lib
 
