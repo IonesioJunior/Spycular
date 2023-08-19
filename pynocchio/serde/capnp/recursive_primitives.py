@@ -23,7 +23,8 @@ if sys.version_info >= (3, 9):
 
 
 iterable_schema = get_capnp_schema("iterable.capnp").Iterable  # type: ignore
-kv_iterable_schema = get_capnp_schema("kv_iterable.capnp").KVIterable  # type: ignore
+kv_iterable_schema = get_capnp_schema(
+    "kv_iterable.capnp").KVIterable  # type: ignore
 
 
 def serialize_iterable(iterable: Collection) -> bytes:
@@ -53,7 +54,9 @@ def deserialize_iterable(iterable_type: type, blob: bytes) -> Collection:
         traversal_limit_in_words=MAX_TRAVERSAL_LIMIT,
     ) as msg:
         for element in msg.values:
-            values.append(_deserialize(combine_bytes(element), from_bytes=True))
+            values.append(
+                _deserialize(combine_bytes(element), from_bytes=True)
+            )
 
     return iterable_type(values)
 
@@ -179,7 +182,9 @@ def deserialize_path(path_type: Type[TPath], buf: bytes) -> TPath:
 # bit_length + 1 for signed
 recursive_serde_register(
     int,
-    serialize=lambda x: x.to_bytes((x.bit_length() + 7) // 8 + 1, "big", signed=True),
+    serialize=lambda x: x.to_bytes(
+        (x.bit_length() + 7) // 8 + 1, "big", signed=True
+    ),
     deserialize=lambda x_bytes: int.from_bytes(x_bytes, "big", signed=True),
 )
 
@@ -282,7 +287,9 @@ recursive_serde_register(
     deserialize=lambda x: slice(*deserialize_iterable(tuple, x)),
 )
 
-recursive_serde_register(type, serialize=serialize_type, deserialize=deserialize_type)
+recursive_serde_register(
+    type, serialize=serialize_type, deserialize=deserialize_type
+)
 recursive_serde_register(
     MappingProxyType,
     serialize=serialize_kv,

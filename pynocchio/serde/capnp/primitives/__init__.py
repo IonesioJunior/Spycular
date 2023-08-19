@@ -3,10 +3,10 @@ import pathlib
 import sys
 import weakref
 from collections import OrderedDict, defaultdict
-from enum import Enum, EnumMeta
+from enum import EnumMeta
 from types import MappingProxyType
 from typing import (Any, List, Optional, TypeVar, Union, _GenericAlias,
-                    _SpecialForm, cast)
+                    _SpecialForm)
 
 from ..recursive import recursive_serde_register
 from .serde import (deserialize_defaultdict, deserialize_generic_alias,
@@ -30,7 +30,9 @@ def load_primitives_serde():
             "big",
             signed=True,
         ),
-        deserialize=lambda x_bytes: int.from_bytes(x_bytes, "big", signed=True),
+        deserialize=lambda x_bytes: int.from_bytes(
+            x_bytes, "big", signed=True
+        ),
     )
 
     recursive_serde_register(
@@ -39,7 +41,9 @@ def load_primitives_serde():
         deserialize=lambda x: float.fromhex(x.decode()),
     )
 
-    recursive_serde_register(bytes, serialize=lambda x: x, deserialize=lambda x: x)
+    recursive_serde_register(
+        bytes, serialize=lambda x: x, deserialize=lambda x: x
+    )
 
     recursive_serde_register(
         str,
@@ -160,7 +164,9 @@ def load_primitives_serde():
         t: type,
         serialize_attrs: Optional[List] = None,
     ) -> None:
-        if (isinstance(t, type) and issubclass(t, _GenericAlias)) or issubclass(
+        if (
+            isinstance(t, type) and issubclass(t, _GenericAlias)
+        ) or issubclass(
             type(t),
             _GenericAlias,
         ):

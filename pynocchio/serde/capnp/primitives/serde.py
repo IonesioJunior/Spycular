@@ -1,29 +1,17 @@
 # stdlib
-import functools
-import pathlib
 import sys
-import weakref
-from collections import OrderedDict, defaultdict
-from enum import Enum, EnumMeta
+from collections import defaultdict
+from enum import Enum
 from pathlib import PurePath
-from types import MappingProxyType
 from typing import (Any, Collection, Dict, List, Mapping, Optional, Type,
-                    TypeVar, Union, _GenericAlias, _SpecialForm, cast)
+                    TypeVar, _GenericAlias, cast)
 
-from ..recursive import chunk_bytes, combine_bytes, recursive_serde_register
+from ..recursive import chunk_bytes, combine_bytes
 from ..util import get_capnp_schema
 
-# relative
-
-
-# import types unsupported on python 3.8
-if sys.version_info >= (3, 9):
-    # stdlib
-    from typing import _SpecialGenericAlias, _UnionGenericAlias
-
-
 iterable_schema = get_capnp_schema("iterable.capnp").Iterable  # type: ignore
-kv_iterable_schema = get_capnp_schema("kv_iterable.capnp").KVIterable  # type: ignore
+kv_iterable_schema = get_capnp_schema(
+    "kv_iterable.capnp").KVIterable  # type: ignore
 
 
 def serialize_iterable(iterable: Collection) -> bytes:
@@ -53,7 +41,9 @@ def deserialize_iterable(iterable_type: type, blob: bytes) -> Collection:
         traversal_limit_in_words=MAX_TRAVERSAL_LIMIT,
     ) as msg:
         for element in msg.values:
-            values.append(_deserialize(combine_bytes(element), from_bytes=True))
+            values.append(
+                _deserialize(combine_bytes(element), from_bytes=True)
+            )
 
     return iterable_type(values)
 

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import weakref
 from types import ModuleType
-from typing import Any, Callable, Dict, List, Type, Union
+from typing import Any, Callable, Dict, List
 
 from ..store.abstract import AbstractStore
 from .abstract import Pointer
@@ -211,7 +210,10 @@ class ObjectActionPointer(Pointer):
         self.temp_obj = temp_obj
 
     def __repr__(self) -> str:
-        return f"<ObjectActionPointer {self.id} target_id={self.target_id}  path={self.path} args={self.args}  kwargs={self.kwargs} temp_obj={self.temp_obj}>"
+        return f"<ObjectActionPointer {self.id} \
+        target_id={self.target_id}  path={self.path} \
+        args={self.args}  kwargs={self.kwargs} \
+        temp_obj={self.temp_obj}>"
 
     def solve(
         self,

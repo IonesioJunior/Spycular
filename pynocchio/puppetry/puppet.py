@@ -20,7 +20,7 @@ class Puppet:
             storage,
             reply_callback,
         )
-        result = pointer.solve(
+        pointer.solve(
             lib=self._original_module,
             storage=storage,
             reply_callback=reply_callback,

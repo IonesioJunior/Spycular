@@ -27,7 +27,9 @@ SUPPORTED_FLOAT_TYPES = [
     np.float64,
 ]
 
-SUPPORTED_DTYPES = SUPPORTED_BOOL_TYPES + SUPPORTED_INT_TYPES + SUPPORTED_FLOAT_TYPES
+SUPPORTED_DTYPES = (
+    SUPPORTED_BOOL_TYPES + SUPPORTED_INT_TYPES + SUPPORTED_FLOAT_TYPES
+)
 
 DTYPE_REFACTOR = {
     np.dtype("uint16"): np.int16,
@@ -45,7 +47,9 @@ def arrow_serialize(obj: np.ndarray) -> bytes:
     numpy_bytes = pa.compress(buffer, asbytes=True, codec="snappy")
     dtype = original_dtype.name
 
-    return cast(bytes, _serialize((numpy_bytes, buffer.size, dtype), to_bytes=True))
+    return cast(
+        bytes, _serialize((numpy_bytes, buffer.size, dtype), to_bytes=True)
+    )
 
 
 def arrow_deserialize(
@@ -140,4 +144,6 @@ def numpy_deserialize(buf: bytes) -> np.ndarray:
     elif isinstance(deser, np.ndarray):
         return numpyutf8toarray(deser)
     else:
-        raise ValueError(f"Invalid type:{type(deser)} for numpy deserialization")
+        raise ValueError(
+            f"Invalid type:{type(deser)} for numpy deserialization"
+        )

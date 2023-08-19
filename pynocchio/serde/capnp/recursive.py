@@ -8,14 +8,14 @@ from typing import Any, Callable, List, Optional, Set, Type, Union
 from capnp.lib.capnp import _DynamicStructBuilder
 from pydantic import BaseModel
 
-from .deserialize import _deserialize
 from .serialize import _serialize
 # syft absolute
 from .util import get_capnp_schema
 
 TYPE_BANK = {}
 
-recursive_scheme = get_capnp_schema("recursive_serde.capnp").RecursiveSerde  # type: ignore
+recursive_scheme = get_capnp_schema(
+    "recursive_serde.capnp").RecursiveSerde  # type: ignore
 
 
 def serializable(cls):
@@ -52,7 +52,9 @@ def get_fully_qualified_name(obj: object) -> str:
     return fqn
 
 
-def get_types(cls: Type, keys: Optional[List[str]] = None) -> Optional[List[Type]]:
+def get_types(
+    cls: Type, keys: Optional[List[str]] = None
+) -> Optional[List[Type]]:
     if keys is None:
         return None
     types = []
@@ -73,7 +75,8 @@ def get_types(cls: Type, keys: Optional[List[str]] = None) -> Optional[List[Type
 
 
 def check_fqn_alias(cls: Union[object, type]) -> Optional[tuple]:
-    """Currently, typing.Any has different metaclasses in different versions of Python 🤦‍♂️.
+    """Currently, typing.Any has different metaclasses in
+    different versions of Python 🤦‍♂️.
     For Python <=3.10
     Any is an instance of typing._SpecialForm
 
@@ -112,7 +115,6 @@ def recursive_serde_register(
     inherit_attrs: Optional[bool] = True,
     inheritable_attrs: Optional[bool] = True,
 ) -> None:
-    base_attrs = None
     attribute_list: Set[str] = set()
 
     alias_fqn = check_fqn_alias(cls)
@@ -182,7 +184,9 @@ def combine_bytes(capnp_list: List[bytes]) -> bytes:
     return bytes_value
 
 
-def rs_object2proto(self: Any, for_hashing: bool = False) -> _DynamicStructBuilder:
+def rs_object2proto(
+    self: Any, for_hashing: bool = False
+) -> _DynamicStructBuilder:
     is_type = False
     if isinstance(self, type):
         is_type = True
@@ -228,7 +232,8 @@ def rs_object2proto(self: Any, for_hashing: bool = False) -> _DynamicStructBuild
     for idx, attr_name in enumerate(sorted(attribute_list)):
         if not hasattr(self, attr_name):
             raise ValueError(
-                f"{attr_name} on {type(self)} does not exist, serialization aborted!",
+                f"{attr_name} on {type(self)} does not exist,\
+                serialization aborted!",
             )
 
         field_obj = getattr(self, attr_name)
@@ -240,7 +245,9 @@ def rs_object2proto(self: Any, for_hashing: bool = False) -> _DynamicStructBuild
         if isinstance(field_obj, types.FunctionType):
             continue
 
-        serialized = _serialize(field_obj, to_bytes=True, for_hashing=for_hashing)
+        serialized = _serialize(
+            field_obj, to_bytes=True, for_hashing=for_hashing
+        )
         msg.fieldsName[idx] = attr_name
         chunk_bytes(serialized, idx, msg.fieldsData)
 
@@ -268,10 +275,14 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
 
     if klass != "NoneType":
         try:
-            class_type = index_syft_by_module_name(proto.fullyQualifiedName)  # type: ignore
+            class_type = index_syft_by_module_name(
+                proto.fullyQualifiedName
+            )  # type: ignore
         except Exception:  # nosec
             try:
-                class_type = getattr(sys.modules[".".join(module_parts)], klass)
+                class_type = getattr(
+                    sys.modules[".".join(module_parts)], klass
+                )
             except Exception:  # nosec
                 if "syft.user" in proto.fullyQualifiedName:
                     # relative
@@ -280,18 +291,15 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
                     for _, load_user_code in CODE_RELOADER.items():
                         load_user_code()
                 try:
-                    class_type = getattr(sys.modules[".".join(module_parts)], klass)
+                    class_type = getattr(
+                        sys.modules[".".join(module_parts)], klass
+                    )
                 except Exception:  # nosec
                     pass
 
     if proto.fullyQualifiedName not in TYPE_BANK:
         raise Exception(f"{proto.fullyQualifiedName} not in TYPE_BANK")
 
-    # TODO: 🐉 sort this out, basically sometimes the syft.user classes are not in the
-    # module name space in sub-processes or threads even though they are loaded on start
-    # its possible that the uvicorn awsgi server is preloading a bunch of threads
-    # however simply getting the class from the TYPE_BANK doesn't always work and
-    # causes some errors so it seems like we want to get the local one where possible
     (
         nonrecursive,
         serialize,
@@ -310,9 +318,8 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
 
     if nonrecursive:
         if deserialize is None:
-            raise Exception(
-                f"Cant serialize {type(proto)} nonrecursive without serialize.",
-            )
+            raise Exception(f"Cant serialize {type(proto)} \
+            nonrecursive without serialize.")
 
         return deserialize(combine_bytes(proto.nonrecursiveBlob))
 
@@ -338,8 +345,6 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
         # AttributeError: object has no attribute '__fields_set__'
 
         if "syft.user" in proto.fullyQualifiedName:
-            # weird issues with pydantic and ForwardRef on user classes being inited
-            # with custom state args / kwargs
             obj = class_type()
             for attr_name, attr_value in kwargs.items():
                 setattr(obj, attr_name, attr_value)

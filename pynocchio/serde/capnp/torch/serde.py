@@ -17,7 +17,9 @@ def tensor_deserialize(buf: bytes) -> np.ndarray:
     if isinstance(deser, tuple):
         return arrow_deserialize(*deser)
     else:
-        raise ValueError(f"Invalid type:{type(deser)} for numpy deserialization")
+        raise ValueError(
+            f"Invalid type:{type(deser)} for numpy deserialization"
+        )
 
 
 def arrow_serialize(tensor: th.Tensor) -> bytes:
@@ -29,7 +31,9 @@ def arrow_serialize(tensor: th.Tensor) -> bytes:
     buffer = sink.getvalue()
     numpy_bytes = pa.compress(buffer, asbytes=True, codec="snappy")
     dtype = original_dtype.name
-    return cast(bytes, _serialize((numpy_bytes, buffer.size, dtype), to_bytes=True))
+    return cast(
+        bytes, _serialize((numpy_bytes, buffer.size, dtype), to_bytes=True)
+    )
 
 
 def arrow_deserialize(

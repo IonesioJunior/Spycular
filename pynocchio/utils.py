@@ -25,12 +25,15 @@ def generate_uuid_from_string(input_string, namespace="puppet"):
     # Convert the hash bytes to UUID format
     time_low = int.from_bytes(hash_bytes[0:4], byteorder="big")
     time_mid = int.from_bytes(hash_bytes[4:6], byteorder="big")
-    time_hi_version = (int.from_bytes(hash_bytes[6:8], byteorder="big") & 0x0FFF) | (
-        5 << 12
-    )
+    time_hi_version = (
+        int.from_bytes(hash_bytes[6:8], byteorder="big") & 0x0FFF
+    ) | (5 << 12)
     clock_seq_hi_variant = (hash_bytes[8] & 0x3F) | 0x80
     clock_seq_low = hash_bytes[9]
     node = int.from_bytes(hash_bytes[10:], byteorder="big")
 
     # Return formatted UUID string
-    return f"{time_low:08x}-{time_mid:04x}-{time_hi_version:04x}-{clock_seq_hi_variant:02x}{clock_seq_low:02x}-{node:012x}"
+    return f"{time_low:08x}-\
+        {time_mid:04x}-{time_hi_version:04x}-\
+        {clock_seq_hi_variant:02x}{clock_seq_low:02x}-\
+        {node:012x}"

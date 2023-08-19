@@ -18,7 +18,9 @@ class CallablePointer(Pointer):
         self.kwargs = kwargs
 
     def __repr__(self) -> str:
-        return f"<CallablePointer {self.id}  path={self.path} args={self.args}  kwargs={self.kwargs}>"
+        return f"<CallablePointer {self.id} \
+        path={self.path} args={self.args} \
+        kwargs={self.kwargs}>"
 
     def solve(
         self,
@@ -48,7 +50,9 @@ class BuiltinPointer(CallablePointer):
         super().__init__(path, pointer_id, args, kwargs)
 
     def __repr__(self) -> str:
-        return f"<BuiltinPointer {self.id}  path={self.path} args={self.args}  kwargs={self.kwargs}>"
+        return f"<BuiltinPointer {self.id} \
+        path={self.path} args={self.args} \
+        kwargs={self.kwargs}>"
 
 
 class FunctionPointer(CallablePointer):
@@ -62,7 +66,9 @@ class FunctionPointer(CallablePointer):
         super().__init__(path, pointer_id, args, kwargs)
 
     def __repr__(self) -> str:
-        return f"<FunctionPointer {self.id}  path={self.path} args={self.args}  kwargs={self.kwargs}>"
+        return f"<FunctionPointer {self.id} \
+        path={self.path} args={self.args} \
+        kwargs={self.kwargs}>"
 
 
 class MethodPointer(CallablePointer):
@@ -76,4 +82,6 @@ class MethodPointer(CallablePointer):
         super().__init__(path, pointer_id, args, kwargs)
 
     def __repr__(self) -> str:
-        return f"<MethodPointer {self.id}  path={self.path} args={self.args}  kwargs={self.kwargs}>"
+        return f"<MethodPointer {self.id} \
+        path={self.path} args={self.args} \
+        kwargs={self.kwargs}>"
