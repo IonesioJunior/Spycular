@@ -1,24 +1,18 @@
-from abc import ABC, abstractclassmethod
+from abc import ABCMeta, abstractmethod
+from typing import Any
 
-from ..pointer import GetPointer, Pointer
+from ..pointer.abstract import Pointer
+from ..pointer.object_pointer import GetPointer
 
 
-class AbstractProducer(ABC):
+class AbstractProducer(metaclass=ABCMeta):
     def __init__(self):
         super().__init__()
 
-    @abstractclassmethod
-    def send(self, ptr: Pointer):
+    @abstractmethod
+    def send(self, ptr: Pointer) -> None:
         pass
 
-    @abstractclassmethod
-    async def send(self, ptr: Pointer):
-        pass
-
-    @abstractclassmethod
-    def request(self, ptr: GetPointer):
-        pass
-
-    @abstractclassmethod
-    async def request(self, ptr: GetPointer):
+    @abstractmethod
+    def request(self, ptr: GetPointer) -> Any:
         pass

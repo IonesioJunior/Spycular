@@ -1,12 +1,10 @@
-import numpy as np
+import pytest
+
+np = pytest.importorskip("numpy")
+capnp = pytest.importorskip("capnp")
 
 from pynocchio.serde.capnp.deserialize import _deserialize
-from pynocchio.serde.capnp.numpy import load_numpy_serde
-from pynocchio.serde.capnp.primitives import load_primitives_serde
 from pynocchio.serde.capnp.serialize import _serialize
-
-load_primitives_serde()
-load_numpy_serde()
 
 
 def test_simple_numpy_array():

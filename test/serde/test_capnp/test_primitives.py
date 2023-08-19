@@ -1,8 +1,10 @@
-from pynocchio.serde.capnp.deserialize import _deserialize
-from pynocchio.serde.capnp.primitives import load_primitives_serde
-from pynocchio.serde.capnp.serialize import _serialize
+import pytest
 
-load_primitives_serde()
+np = pytest.importorskip("numpy")
+capnp = pytest.importorskip("capnp")
+
+from pynocchio.serde.capnp.deserialize import _deserialize
+from pynocchio.serde.capnp.serialize import _serialize
 
 
 def test_int():

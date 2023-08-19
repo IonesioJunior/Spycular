@@ -1,23 +1,19 @@
-from abc import ABC, abstractclassmethod
+from abc import ABCMeta, abstractmethod
 
 
-class AbstractStore(ABC):
+class AbstractStore(metaclass=ABCMeta):
     def __init__(self, store) -> None:
         self.store = store
         super().__init__()
 
-    @abstractclassmethod
+    @abstractmethod
     def save(self, obj_id: str, obj):
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def get(self, obj_id):
         pass
 
-    @abstractclassmethod
-    async def save(self, obj_id: str, obj):
-        pass
-
-    @abstractclassmethod
-    async def get(self, obj_id):
+    @abstractmethod
+    def has(self, obj_id):
         pass

@@ -1,12 +1,12 @@
-import torch as th
+import pytest
 
+np = pytest.importorskip("numpy")
+capnp = pytest.importorskip("capnp")
+th = pytest.importorskip("torch")
+
+print("My Capnp: ", capnp)
 from pynocchio.serde.capnp.deserialize import _deserialize
-from pynocchio.serde.capnp.primitives import load_primitives_serde
 from pynocchio.serde.capnp.serialize import _serialize
-from pynocchio.serde.capnp.torch import load_torch_serde
-
-load_primitives_serde()
-load_torch_serde()
 
 
 def test_simple_numpy_array():
