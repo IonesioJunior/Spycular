@@ -1,6 +1,7 @@
 import torch as th
 
 from ..recursive import recursive_serde_register
+
 # relative
 from .serde import tensor_deserialize, tensor_serialize
 

@@ -3,6 +3,7 @@ import numpy as np
 from numpy import frombuffer
 
 from ..recursive import recursive_serde_register
+
 # relative
 from .serde import numpy_deserialize, numpy_serialize
 

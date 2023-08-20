@@ -7,19 +7,25 @@ from collections import OrderedDict, defaultdict
 from enum import Enum, EnumMeta
 from pathlib import PurePath
 from types import MappingProxyType
-from typing import (Any, Collection, Dict, List, Mapping, Optional, Type,
-                    TypeVar, Union, _GenericAlias, _SpecialForm, cast)
+from typing import GenericAlias  # type: ignore
+from typing import (
+    Any,
+    Collection,
+    Dict,
+    List,
+    Mapping,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    _SpecialForm,
+    cast,
+)
 
 from .recursive import chunk_bytes, combine_bytes, recursive_serde_register
 from .util import get_capnp_schema
 
 # relative
-
-
-# import types unsupported on python 3.8
-if sys.version_info >= (3, 9):
-    # stdlib
-    from typing import _SpecialGenericAlias, _UnionGenericAlias
 
 
 iterable_schema = get_capnp_schema("iterable.capnp").Iterable  # type: ignore
@@ -317,7 +323,7 @@ for __path_type in (
     )
 
 
-def serialize_generic_alias(serialized_type: _GenericAlias) -> bytes:
+def serialize_generic_alias(serialized_type: GenericAlias) -> bytes:
     # relative
     from ..util.util import full_name_with_name
     from .serialize import _serialize
@@ -364,12 +370,12 @@ def deserialize_generic_alias(type_blob: bytes) -> type:
 
 # 🟡 TODO 5: add tests and all typing options for signatures
 def recursive_serde_register_type(
-    t: type,
+    t: type | object,
     serialize_attrs: Optional[List] = None,
 ) -> None:
-    if (isinstance(t, type) and issubclass(t, _GenericAlias)) or issubclass(
+    if (isinstance(t, type) and issubclass(t, GenericAlias)) or issubclass(
         type(t),
-        _GenericAlias,
+        GenericAlias,
     ):
         recursive_serde_register(
             t,
@@ -387,24 +393,10 @@ def recursive_serde_register_type(
 
 
 recursive_serde_register_type(_SpecialForm)
-recursive_serde_register_type(_GenericAlias)
+recursive_serde_register_type(GenericAlias)
 recursive_serde_register_type(Union)
 recursive_serde_register_type(TypeVar)
 
-if sys.version_info >= (3, 9):
-    recursive_serde_register_type(
-        _UnionGenericAlias,
-        serialize_attrs=[
-            "__parameters__",
-            "__slots__",
-            "_inst",
-            "_name",
-            "__args__",
-            "__module__",
-            "__origin__",
-        ],
-    )
-    recursive_serde_register_type(_SpecialGenericAlias)
 
 recursive_serde_register_type(Any)
 recursive_serde_register_type(EnumMeta)

@@ -2,6 +2,8 @@ from types import ModuleType
 from typing import Any, Callable, Dict, Iterable, Tuple
 
 from ..pointer.abstract import Pointer
+from ..pointer.callable_pointer import CallablePointer
+from ..pointer.object_pointer import ObjectActionPointer
 from ..store.abstract import AbstractStore
 
 
@@ -15,11 +17,16 @@ class Puppet:
         storage: AbstractStore,
         reply_callback: Callable,
     ) -> None:
-        pointer.args, pointer.kwargs = self._resolve_pointer_args(
+        if isinstance(pointer, ObjectActionPointer) or isinstance(
             pointer,
-            storage,
-            reply_callback,
-        )
+            CallablePointer,
+        ):
+            print("Here's my pointer: ", pointer)
+            pointer.args, pointer.kwargs = self._resolve_pointer_args(
+                pointer,
+                storage,
+                reply_callback,
+            )
         pointer.solve(
             lib=self._original_module,
             storage=storage,
@@ -52,8 +59,13 @@ class Puppet:
                             storage,
                             reply_callback,
                         )
-                        argument.args = local_args
-                        argument.kwargs = local_kwargs
+                        if isinstance(
+                            argument,
+                            ObjectActionPointer,
+                        ) or isinstance(argument, CallablePointer):
+                            argument.args = local_args
+                            argument.kwargs = local_kwargs
+
                         new_arg = argument.solve(
                             self._original_module,
                             storage=storage,

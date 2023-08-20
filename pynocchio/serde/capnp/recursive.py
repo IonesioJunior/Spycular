@@ -9,6 +9,7 @@ from capnp.lib.capnp import _DynamicStructBuilder
 from pydantic import BaseModel
 
 from .serialize import _serialize
+
 # syft absolute
 from .util import get_capnp_schema
 
@@ -138,7 +139,7 @@ def recursive_serde_register(
     exclude_attrs = [] if exclude_attrs is None else exclude_attrs
     attribute_list = attribute_list - set(exclude_attrs)
 
-    attributes = set(list(attribute_list)) if attribute_list else None
+    attributes = list(set(list(attribute_list))) if attribute_list else None
     attribute_types = get_types(cls, attributes)
     serde_overrides = getattr(cls, "__serde_overrides__", {})
 
@@ -225,14 +226,14 @@ def rs_object2proto(
         attribute_list = self.__dict__.keys()
 
     hash_exclude_attrs_set = set(hash_exclude_attrs) if for_hashing else set()
-    attribute_list = (
+    new_attribute_list = (
         set(attribute_list) - set(exclude_attrs_list) - hash_exclude_attrs_set
     )
 
-    msg.init("fieldsName", len(attribute_list))
-    msg.init("fieldsData", len(attribute_list))
+    msg.init("fieldsName", len(new_attribute_list))
+    msg.init("fieldsData", len(new_attribute_list))
 
-    for idx, attr_name in enumerate(sorted(attribute_list)):
+    for idx, attr_name in enumerate(sorted(new_attribute_list)):
         if not hasattr(self, attr_name):
             raise ValueError(
                 f"{attr_name} on {type(self)} does not exist,\
@@ -280,9 +281,10 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
 
     if klass != "NoneType":
         try:
-            class_type = index_syft_by_module_name(
-                proto.fullyQualifiedName,
-            )  # type: ignore
+            class_type = getattr(
+                sys.modules[".".join(module_parts)],
+                klass,
+            )
         except Exception:  # nosec
             try:
                 class_type = getattr(
@@ -290,19 +292,7 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
                     klass,
                 )
             except Exception:  # nosec
-                if "syft.user" in proto.fullyQualifiedName:
-                    # relative
-                    from ..node.node import CODE_RELOADER
-
-                    for _, load_user_code in CODE_RELOADER.items():
-                        load_user_code()
-                try:
-                    class_type = getattr(
-                        sys.modules[".".join(module_parts)],
-                        klass,
-                    )
-                except Exception:  # nosec
-                    pass
+                pass
 
     if proto.fullyQualifiedName not in TYPE_BANK:
         raise Exception(f"{proto.fullyQualifiedName} not in TYPE_BANK")
@@ -319,7 +309,7 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
         attribute_types,
     ) = TYPE_BANK[proto.fullyQualifiedName]
 
-    if class_type == type(None):
+    if class_type == type(None):  # noqa: E721
         # yes this looks stupid but it works and the opposite breaks
         class_type = cls
 
@@ -347,19 +337,13 @@ def rs_proto2object(proto: _DynamicStructBuilder) -> Any:
     if hasattr(class_type, "serde_constructor"):
         return class_type.serde_constructor(kwargs)
 
+    obj: BaseModel | None | object = None
     if issubclass(class_type, Enum) and "value" in kwargs:
         obj = class_type.__new__(class_type, kwargs["value"])  # type: ignore
     elif issubclass(class_type, BaseModel):
         # if we skip the __new__ flow of BaseModel we get the error
         # AttributeError: object has no attribute '__fields_set__'
-
-        if "syft.user" in proto.fullyQualifiedName:
-            obj = class_type()
-            for attr_name, attr_value in kwargs.items():
-                setattr(obj, attr_name, attr_value)
-        else:
-            obj = class_type(**kwargs)
-
+        obj = class_type(**kwargs)
     else:
         obj = class_type.__new__(class_type)  # type: ignore
         for attr_name, attr_value in kwargs.items():

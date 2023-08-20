@@ -3,8 +3,18 @@ import sys
 from collections import defaultdict
 from enum import Enum
 from pathlib import PurePath
-from typing import (Any, Collection, Dict, List, Mapping, Optional, Type,
-                    TypeVar, _GenericAlias, cast)
+from typing import GenericAlias  # type: ignore
+from typing import (
+    Any,
+    Collection,
+    Dict,
+    List,
+    Mapping,
+    Optional,
+    Type,
+    TypeVar,
+    cast,
+)
 
 from ..recursive import chunk_bytes, combine_bytes
 from ..util import get_capnp_schema
@@ -167,7 +177,7 @@ def deserialize_path(path_type: Type[TPath], buf: bytes) -> TPath:
     return path_type(path)
 
 
-def serialize_generic_alias(serialized_type: _GenericAlias) -> bytes:
+def serialize_generic_alias(serialized_type: GenericAlias) -> bytes:
     # relative
     from ..serialize import _serialize
     from ..util.util import full_name_with_name

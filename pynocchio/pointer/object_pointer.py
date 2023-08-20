@@ -23,6 +23,14 @@ class ObjectPointer(Pointer):
         self.__registered = register
         self.target_id = target_id
 
+    @property
+    def args(self) -> tuple[Any, ...]:
+        return tuple()
+
+    @property
+    def kwargs(self) -> Dict[str, Any]:
+        return dict()
+
     def __getattr__(self, name: str) -> ObjectPointer:
         if self.target_id:
             return ObjectPointer(
@@ -38,22 +46,6 @@ class ObjectPointer(Pointer):
                 parents=[self],
                 broker=self.broker,
             )
-
-    @property
-    def args(self) -> List:
-        return []
-
-    @property
-    def kwargs(self) -> Dict:
-        return {}
-
-    @args.setter
-    def args(self, args: List[Any]) -> None:
-        pass
-
-    @kwargs.setter
-    def kwargs(self, kwargs: Dict[str, Any]) -> None:
-        pass
 
     def __call__(self, *args, **kwargs: Dict[str, Any]) -> ObjectPointer:
         if self.target_id:
@@ -138,12 +130,16 @@ class ObjectPointer(Pointer):
         reply_callback: Callable | None = None,
     ) -> None | Any:
         if storage:
+            # If object is stored, retrieve it.
             if storage.has(self.id):
                 return storage.get(self.id)
+            # If object isn't stored but poiting to another object.
             elif storage.has(self.target_id):
                 obj = storage.get(self.target_id)
                 for attr in self.path.split("."):
                     obj = getattr(obj, attr)
+            # If object isn't stored and isn't pointing to another object.
+            # Process it and save it
             else:
                 obj = lib
 
@@ -151,6 +147,9 @@ class ObjectPointer(Pointer):
                     obj = getattr(obj, attr)
 
             storage.save(self.id, obj)
+        # If storage is None, just process the object.
+        # This aims to provide temp variables without storing them
+        # in the storage.
         else:
             obj = lib
 

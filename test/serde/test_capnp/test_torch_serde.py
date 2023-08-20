@@ -4,9 +4,8 @@ np = pytest.importorskip("numpy")
 capnp = pytest.importorskip("capnp")
 th = pytest.importorskip("torch")
 
-print("My Capnp: ", capnp)
-from pynocchio.serde.capnp.deserialize import _deserialize
-from pynocchio.serde.capnp.serialize import _serialize
+from pynocchio.serde.capnp.deserialize import _deserialize  # noqa: E402
+from pynocchio.serde.capnp.serialize import _serialize  # noqa: E402
 
 
 def test_simple_numpy_array():

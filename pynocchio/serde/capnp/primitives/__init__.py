@@ -1,24 +1,27 @@
 import functools
 import pathlib
-import sys
 import weakref
 from collections import OrderedDict, defaultdict
 from enum import EnumMeta
 from types import MappingProxyType
-from typing import (Any, List, Optional, TypeVar, Union, _GenericAlias,
-                    _SpecialForm)
+from typing import GenericAlias  # type: ignore
+from typing import Any, List, Optional, TypeVar, Union, _SpecialForm
 
 from ..recursive import recursive_serde_register
-from .serde import (deserialize_defaultdict, deserialize_generic_alias,
-                    deserialize_iterable, deserialize_kv, deserialize_path,
-                    deserialize_type, serialize_defaultdict,
-                    serialize_generic_alias, serialize_iterable, serialize_kv,
-                    serialize_path, serialize_type)
-
-# import types unsupported on python 3.8
-if sys.version_info >= (3, 9):
-    # stdlib
-    from typing import _SpecialGenericAlias, _UnionGenericAlias
+from .serde import (
+    deserialize_defaultdict,
+    deserialize_generic_alias,
+    deserialize_iterable,
+    deserialize_kv,
+    deserialize_path,
+    deserialize_type,
+    serialize_defaultdict,
+    serialize_generic_alias,
+    serialize_iterable,
+    serialize_kv,
+    serialize_path,
+    serialize_type,
+)
 
 
 def load_primitives_serde():
@@ -168,11 +171,9 @@ def load_primitives_serde():
         t: type,
         serialize_attrs: Optional[List] = None,
     ) -> None:
-        if (
-            isinstance(t, type) and issubclass(t, _GenericAlias)
-        ) or issubclass(
+        if (isinstance(t, type) and issubclass(t, GenericAlias)) or issubclass(
             type(t),
-            _GenericAlias,
+            GenericAlias,
         ):
             recursive_serde_register(
                 t,
@@ -189,24 +190,9 @@ def load_primitives_serde():
             )
 
     recursive_serde_register_type(_SpecialForm)
-    recursive_serde_register_type(_GenericAlias)
+    recursive_serde_register_type(GenericAlias)
     recursive_serde_register_type(Union)
     recursive_serde_register_type(TypeVar)
-
-    if sys.version_info >= (3, 9):
-        recursive_serde_register_type(
-            _UnionGenericAlias,
-            serialize_attrs=[
-                "__parameters__",
-                "__slots__",
-                "_inst",
-                "_name",
-                "__args__",
-                "__module__",
-                "__origin__",
-            ],
-        )
-        recursive_serde_register_type(_SpecialGenericAlias)
 
     recursive_serde_register_type(Any)
     recursive_serde_register_type(EnumMeta)

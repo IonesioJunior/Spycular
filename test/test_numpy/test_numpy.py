@@ -360,16 +360,20 @@ def test_split_array(np, consumer, replies):
 
     local_array = local_numpy.arange(9)
     split_array_local = local_numpy.split(local_array, 3)
-    split_array_2_local = local_numpy.split(local_array, [4, 7])
+    # split_array_2_local = local_numpy.split(local_array, [4, 7])
 
     split_array_ptr.retrieve()
     split_array_2_ptr.retrieve()
     consumer.listen()
     ptr1_result = replies[split_array_ptr.id]
-    ptr2_result = replies[split_array_2_ptr.id]
+    # ptr2_result = replies[split_array_2_ptr.id]
     assert local_numpy.array_equal(split_array_local, ptr1_result)
 
-    # assert  local_numpy.array_equal(split_array_2_local, split_array_2_local) Not sure why, but it doesn't work for this use case.
+    """
+    assert  local_numpy.array_equal(
+        split_array_2_local,
+        split_array_2_local)
+    Not sure why, but it doesn't work for this use case."""
 
 
 def test_h_split_array(np, consumer, replies):
@@ -480,10 +484,10 @@ def test_array_unique(np, consumer, replies):
         local_array,
         return_index=True,
     )
-    local_array_unique_inverse_ptr = local_numpy.unique(
-        local_array,
-        return_inverse=True,
-    )
+    # local_array_unique_inverse_ptr = local_numpy.unique(
+    #    local_array,
+    #    return_inverse=True,
+    # )
     local_array_unique_counts_ptr = local_numpy.unique(
         local_array,
         return_counts=True,
@@ -496,9 +500,12 @@ def test_array_unique(np, consumer, replies):
     consumer.listen()
     ptr1_result = replies[unique_ptr.id]
     ptr2_result = replies[unique_index_ptr.id]
-    ptr3_result = replies[unique_inverse_ptr.id]
+    # ptr3_result = replies[unique_inverse_ptr.id]
     ptr4_result = replies[unique_counts_ptr.id]
     assert local_numpy.array_equal(local_array_unique_ptr, ptr1_result)
     assert local_numpy.array_equal(local_array_unique_index_ptr, ptr2_result)
     assert local_numpy.array_equal(local_array_unique_counts_ptr, ptr4_result)
-    # assert  local_numpy.array_equal(local_array_unique_inverse_ptr, ptr3_result) Not sure why but it fails even being visually equal
+    # Not sure why but it fails even being visually equal
+    # assert  local_numpy.array_equal(
+    # local_array_unique_inverse_ptr,
+    # ptr3_result)

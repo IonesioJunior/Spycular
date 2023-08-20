@@ -9,8 +9,6 @@ homepage = "https://example.com/pynocchio"
 repository = "https://github.com/username/pynocchio"
 documentation = "https://example.com/pynocchio/docs"
 
-[tool.poetry.scripts]
-test = "pytest test"
 
 [tool.poetry.dependencies]
 python = "^3.10"

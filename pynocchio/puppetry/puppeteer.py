@@ -4,8 +4,11 @@ import inspect
 from types import ModuleType
 from typing import Any, Callable, List, Set, Type
 
-from ..pointer.callable_pointer import (BuiltinPointer, FunctionPointer,
-                                        MethodPointer)
+from ..pointer.callable_pointer import (
+    BuiltinPointer,
+    FunctionPointer,
+    MethodPointer,
+)
 from ..pointer.class_pointer import ClassPointer
 from ..pointer.object_pointer import ObjectPointer
 from ..producer.abstract import AbstractProducer

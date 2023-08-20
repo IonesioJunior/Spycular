@@ -8,11 +8,11 @@ from ..deserialize import _deserialize
 from ..serialize import _serialize
 
 
-def tensor_serialize(obj: np.ndarray) -> bytes:
+def tensor_serialize(obj: th.Tensor) -> bytes:
     return arrow_serialize(obj)
 
 
-def tensor_deserialize(buf: bytes) -> np.ndarray:
+def tensor_deserialize(buf: bytes) -> th.Tensor:
     deser = _deserialize(buf, from_bytes=True)
     if isinstance(deser, tuple):
         return arrow_deserialize(*deser)
