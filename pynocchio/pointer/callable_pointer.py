@@ -1,10 +1,12 @@
 from types import ModuleType
 from typing import Any, Callable, Dict, List, Union
 
+from ..serde.capnp.recursive import serializable
 from ..store.abstract import AbstractStore
 from .abstract import Pointer
 
 
+@serializable
 class CallablePointer(Pointer):
     def __init__(
         self,
@@ -39,6 +41,7 @@ class CallablePointer(Pointer):
         return None
 
 
+@serializable
 class BuiltinPointer(CallablePointer):
     def __init__(
         self,
@@ -55,6 +58,7 @@ class BuiltinPointer(CallablePointer):
         kwargs={self.kwargs}>"
 
 
+@serializable
 class FunctionPointer(CallablePointer):
     def __init__(
         self,
@@ -71,6 +75,7 @@ class FunctionPointer(CallablePointer):
         kwargs={self.kwargs}>"
 
 
+@serializable
 class MethodPointer(CallablePointer):
     def __init__(
         self,

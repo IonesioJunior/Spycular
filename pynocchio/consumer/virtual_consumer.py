@@ -2,8 +2,8 @@ from .abstract import AbstractConsumer
 
 
 class VirtualConsumer(AbstractConsumer):
-    def __init__(self, storage, module, message_queue, reply_queue):
-        super().__init__(storage, module)
+    def __init__(self, storage, message_queue, reply_queue):
+        super().__init__(storage)
         self.message_queue = message_queue
         self.reply_queue = reply_queue
 

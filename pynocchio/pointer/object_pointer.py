@@ -3,11 +3,15 @@ from __future__ import annotations
 from types import ModuleType
 from typing import Any, Callable, Dict, List
 
+from ..serde.capnp.recursive import serializable
 from ..store.abstract import AbstractStore
 from .abstract import Pointer
 
 
+@serializable
 class ObjectPointer(Pointer):
+    __exclude__ = ["broker"]
+
     def __init__(
         self,
         path: str = "",
@@ -174,6 +178,7 @@ class ObjectPointer(Pointer):
         return f"<ObjectPointer {self.id}  path={self.path}>"
 
 
+@serializable
 class GetPointer(Pointer):
     def __init__(self, target_id: str, path: str = "", pointer_id: str = ""):
         super().__init__(path, pointer_id)
@@ -190,6 +195,7 @@ class GetPointer(Pointer):
         return None
 
 
+@serializable
 class ObjectActionPointer(Pointer):
     def __init__(
         self,
