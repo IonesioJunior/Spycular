@@ -36,7 +36,7 @@ repos:
 
   - id: black
     name: Format with Black
-    entry: poetry run black --line-length 79 pynocchio
+    entry: poetry run black pynocchio
     language: system
     types: [python]
 
