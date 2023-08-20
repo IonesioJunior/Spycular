@@ -23,7 +23,9 @@ jobs:
       run: poetry install
     - name: Run black
       run: poetry run black --check pynocchio
+    - name: Run isort
+      run: poetry run isort -c pynocchio
     - name: Run flake8
-      run: poetry run isort --count pynocchio
+      run: poetry run flake8 --count pynocchio
     - name: Run MyPy
       run: poetry run mypy pynocchio
