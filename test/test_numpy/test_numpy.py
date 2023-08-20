@@ -509,3 +509,93 @@ def test_array_unique(np, consumer, replies):
     # assert  local_numpy.array_equal(
     # local_array_unique_inverse_ptr,
     # ptr3_result)
+
+
+def test_add_array(np, consumer, replies):
+    array_ptr_1 = np.array([[1, 2], [3, 4], [5, 6]])
+    array_ptr_2 = np.array([[1, 2], [3, 4], [5, 6]])
+    result_ptr = array_ptr_1 + array_ptr_2
+
+    local_array_1 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    local_array_2 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    result_local = local_array_1 + local_array_2
+
+    result_ptr.retrieve()
+    consumer.listen()
+    ptr1_result = replies[result_ptr.id]
+    assert local_numpy.array_equal(result_local, ptr1_result)
+
+
+def test_sub_array(np, consumer, replies):
+    array_ptr_1 = np.array([[1, 2], [3, 4], [5, 6]])
+    array_ptr_2 = np.array([[1, 2], [3, 4], [5, 6]])
+    result_ptr = array_ptr_1 - array_ptr_2
+
+    local_array_1 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    local_array_2 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    result_local = local_array_1 - local_array_2
+
+    result_ptr.retrieve()
+    consumer.listen()
+    ptr1_result = replies[result_ptr.id]
+    assert local_numpy.array_equal(result_local, ptr1_result)
+
+
+def test_mul_array(np, consumer, replies):
+    array_ptr_1 = np.array([[1, 2], [3, 4], [5, 6]])
+    array_ptr_2 = np.array([[1, 2], [3, 4], [5, 6]])
+    result_ptr = array_ptr_1 * array_ptr_2
+
+    local_array_1 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    local_array_2 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    result_local = local_array_1 * local_array_2
+
+    result_ptr.retrieve()
+    consumer.listen()
+    ptr1_result = replies[result_ptr.id]
+    assert local_numpy.array_equal(result_local, ptr1_result)
+
+
+def test_div_array(np, consumer, replies):
+    array_ptr_1 = np.array([[1, 2], [3, 4], [5, 6]])
+    array_ptr_2 = np.array([[1, 2], [3, 4], [5, 6]])
+    result_ptr = array_ptr_1 / array_ptr_2
+
+    local_array_1 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    local_array_2 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    result_local = local_array_1 / local_array_2
+
+    result_ptr.retrieve()
+    consumer.listen()
+    ptr1_result = replies[result_ptr.id]
+    assert local_numpy.array_equal(result_local, ptr1_result)
+
+
+def test_pow_array(np, consumer, replies):
+    array_ptr_1 = np.array([[1, 2], [3, 4], [5, 6]])
+    array_ptr_2 = np.array([[1, 2], [3, 4], [5, 6]])
+    result_ptr = array_ptr_1**array_ptr_2
+
+    local_array_1 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    local_array_2 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    result_local = local_array_1**local_array_2
+
+    result_ptr.retrieve()
+    consumer.listen()
+    ptr1_result = replies[result_ptr.id]
+    assert local_numpy.array_equal(result_local, ptr1_result)
+
+
+def test_mod_array(np, consumer, replies):
+    array_ptr_1 = np.array([[1, 2], [3, 4], [5, 6]])
+    array_ptr_2 = np.array([[1, 2], [3, 4], [5, 6]])
+    result_ptr = array_ptr_1 // array_ptr_2
+
+    local_array_1 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    local_array_2 = local_numpy.array([[1, 2], [3, 4], [5, 6]])
+    result_local = local_array_1 // local_array_2
+
+    result_ptr.retrieve()
+    consumer.listen()
+    ptr1_result = replies[result_ptr.id]
+    assert local_numpy.array_equal(result_local, ptr1_result)
