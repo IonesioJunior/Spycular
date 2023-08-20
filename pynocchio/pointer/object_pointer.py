@@ -36,96 +36,77 @@ class ObjectPointer(Pointer):
         return dict()
 
     def __getattr__(self, name: str) -> ObjectPointer:
-        if self.target_id:
-            return ObjectPointer(
-                target_id=self.target_id,
-                path=self.path + "." + name,
-                parents=[self],
-                broker=self.broker,
-            )
-        else:
-            return ObjectPointer(
-                target_id=self.id,
-                path=name,
-                parents=[self],
-                broker=self.broker,
-            )
+        return ObjectPointer(
+            target_id=self.target_id if self.target_id else self.id,
+            path=self.path + "." + name if self.target_id else name,
+            parents=[self],
+            broker=self.broker,
+        )
+
+    def __wrap_pointer_action(
+        self,
+        path: str,
+        args: tuple = tuple(),
+        kwargs: Dict[str, Any] = {},
+        temp_obj: ObjectPointer | None = None,
+    ) -> ObjectPointer:
+        obj_action = ObjectActionPointer(
+            target_id=self.target_id if self.target_id else self.id,
+            path=path,
+            args=args,
+            kwargs=kwargs,
+            parents=[self],
+            temp_obj=temp_obj,
+        )
+        self.broker.send(obj_action)
+        obj = ObjectPointer(
+            pointer_id=obj_action.id,
+            parents=[self],
+            broker=self.broker,
+            register=True,
+        )
+        return obj
 
     def __call__(self, *args, **kwargs: Dict[str, Any]) -> ObjectPointer:
-        if self.target_id:
-            obj_action = ObjectActionPointer(
-                target_id=self.target_id,
-                path=self.path,
-                args=args,
-                kwargs=kwargs,
-                parents=[self],
-            )
-        else:
-            obj_action = ObjectActionPointer(
-                target_id=self.id,
-                path=self.path,
-                args=args,
-                kwargs=kwargs,
-                parents=[self],
-            )
-        self.broker.send(obj_action)
-        obj = ObjectPointer(
-            pointer_id=obj_action.id,
-            parents=[self],
-            broker=self.broker,
-            register=True,
-        )
-        return obj
+        return self.__wrap_pointer_action(self.path, args, kwargs)
 
     def __getitem__(self, key: tuple) -> ObjectPointer:
-        if self.target_id:
-            obj_action = ObjectActionPointer(
-                target_id=self.target_id,
-                path=self.path + "." + "__getitem__",
-                args=(key,),
-                parents=[self],
-            )
-        else:
-            temp_obj = self if not self.__registered else None
-            obj_action = ObjectActionPointer(
-                target_id=self.id,
-                path="__getitem__",
-                args=(key,),
-                parents=[self],
-                temp_obj=temp_obj,
-            )
-        self.broker.send(obj_action)
-        obj = ObjectPointer(
-            pointer_id=obj_action.id,
-            parents=[self],
-            broker=self.broker,
-            register=True,
+        return self.__wrap_pointer_action(
+            path=self.path + "." + "__getitem__"
+            if self.target_id
+            else "__getitem__",
+            args=(key,),
+            temp_obj=self
+            if not self.__registered and not self.target_id
+            else None,
         )
-        return obj
 
     def __setitem__(self, key: tuple, value: Any) -> ObjectPointer:
-        if self.target_id:
-            obj_action = ObjectActionPointer(
-                target_id=self.target_id,
-                path="__setitem__",
-                args=(key, value),
-                parents=[self],
-            )
-        else:
-            obj_action = ObjectActionPointer(
-                target_id=self.id,
-                path="__setitem__",
-                args=(key, value),
-                parents=[self],
-            )
-        self.broker.send(obj_action)
-        obj = ObjectPointer(
-            pointer_id=obj_action.id,
-            parents=[self],
-            broker=self.broker,
-            register=True,
+        return self.__wrap_pointer_action(
+            path="__setitem__",
+            args=(key, value),
         )
-        return obj
+
+    def __add__(self, other):
+        return self.__wrap_pointer_action(path="__add__", args=(other,))
+
+    def __sub__(self, other):
+        return self.__wrap_pointer_action(path="__sub__", args=(other,))
+
+    def __mul__(self, other):
+        return self.__wrap_pointer_action(path="__mul__", args=(other,))
+
+    def __truediv__(self, other):
+        return self.__wrap_pointer_action(path="__truediv__", args=(other,))
+
+    def __floordiv__(self, other):
+        return self.__wrap_pointer_action(path="__floordiv__", args=(other,))
+
+    def __mod__(self, other):
+        return self.__wrap_pointer_action(path="__mod__", args=(other,))
+
+    def __pow__(self, other):
+        return self.__wrap_pointer_action(path="__pow__", args=(other,))
 
     def solve(
         self,

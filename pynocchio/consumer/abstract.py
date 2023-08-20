@@ -1,6 +1,7 @@
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 from types import ModuleType
 
+from ..pointer.abstract import Pointer
 from ..puppetry.puppet import Puppet
 
 
@@ -11,3 +12,11 @@ class AbstractConsumer(metaclass=ABCMeta):
 
     def set_module(self, module: ModuleType):
         self.puppet_module = Puppet(module)
+
+    @abstractmethod
+    def execute(self, ptr: Pointer):
+        pass
+
+    @abstractmethod
+    def reply(self, obj_id: str, obj: object):
+        pass

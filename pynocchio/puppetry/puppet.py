@@ -21,7 +21,6 @@ class Puppet:
             pointer,
             CallablePointer,
         ):
-            print("Here's my pointer: ", pointer)
             pointer.args, pointer.kwargs = self._resolve_pointer_args(
                 pointer,
                 storage,

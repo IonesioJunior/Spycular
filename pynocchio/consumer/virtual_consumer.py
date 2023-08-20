@@ -1,3 +1,5 @@
+from typing import Any
+
 from .abstract import AbstractConsumer
 
 
@@ -10,11 +12,14 @@ class VirtualConsumer(AbstractConsumer):
     def listen(self):
         while len(self.message_queue):
             ptr = self.message_queue.pop(0)
-            self.puppet_module.execute(
-                pointer=ptr,
-                storage=self.storage,
-                reply_callback=self.reply,
-            )
+            self.execute(ptr)
 
-    def reply(self, obj_id, obj):
+    def execute(self, ptr):
+        self.puppet_module.execute(
+            pointer=ptr,
+            storage=self.storage,
+            reply_callback=self.reply,
+        )
+
+    def reply(self, obj_id: str, obj: Any):
         self.reply_queue[obj_id] = obj
