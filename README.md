@@ -23,7 +23,29 @@ pip install pynocchio
 
 Dive into Pynocchio and tap into its powerful features! This simple guide will use virtual **producer (client)** and **consumer (server)** abstractions to help you grasp its core concepts and functionalities.
 
-1 - **Client Side**
+1 - **Server Side**
+```python
+import pynocchio as pn
+import numpy as local_numpy
+
+message_queue = []
+reply_queue = {}
+
+# Memory Server Type
+consumer = pn.VirtualConsumer(
+  pn.VirtualStorage(), # Memory Storage Type
+  message_queue,
+  reply_queue)
+
+# Assign the lib tree you'll accept to execute
+pn.serve(local_numpy, consumer)
+
+# Consume Client's requests
+consumer.listen()
+```
+
+
+2 - **Client Side**
 ```python
 import pynocchio as pn
 import numpy as local_numpy
@@ -46,44 +68,98 @@ result = x_ptr + y_ptr
 result.retrieve()
 ```
 
-2 - **Server Side**
+
+## 📡 Choose how you send and receive the remote calls!
+
+  Picking a protocol is a breeze! Pynocchio provides the flexibility to use your preferred communication protocol. To give an example, this is how we can send and receive our commands using WebSockets.
+
+1 - **Pynocchio Websocket Server**
 ```python
-import pynocchio as pn
+import asyncio
+
 import numpy as local_numpy
+import pynocchio as pn
+from pynocchio.consumer.abstract import AbstractConsumer
+from pynocchio.store.virtual_store import VirtualStore
+from pynocchio.serde.capnp.deserialize import _deserialize
+from pynocchio.serde.capnp.serialize import _serialize
+from typing import Any
+from websockets.server import serve
 
-message_queue = []
-reply_queue = {}
 
-# Memory Server Type
-consumer = pn.VirtualConsumer(
-  pn.VirtualStorage(), # Memory Storage Type
-  message_queue,
-  reply_queue)
+class WebsocketConsumer(AbstractConsumer):
+    def __init__(self, storage, websocket):
+        super().__init__(storage)
+        self.websocket = websocket
+        self.reply_queue = []
 
-# Assign the lib tree you'll accept to execute
-pn.serve(local_numpy, consumer)
+    async def execute(self, ptr: bytes):
+        ptr = _deserialize(ptr, from_bytes=True)
+        self.puppet_module.execute(
+            pointer=ptr,storage=self.storage,
+            reply_callback=self.reply,
+        )
+        if self.reply_queue:
+            message = _serialize(self.reply_queue.pop(0), to_bytes=True)
+            await self.websocket.send(message)
 
-# Consume Client's requests
-consumer.listen()
+    def reply(self, obj_id: str, obj: Any):
+        self.reply_queue.append(obj)
+
+
+async def listen(websocket):
+    consumer = WebsocketConsumer(VirtualStore(), websocket=websocket)
+    pn.serve(module=local_numpy,consumer=consumer)
+    async for message in websocket:
+        await consumer.execute(message)
+
+async def main():
+    async with serve(listen, "localhost", 8765):
+        await asyncio.Future()  # run forever
+
+
+asyncio.run(main())
+
 ```
 
-
-## 📡 Communication
-
-Choose how you send and receive the remote calls! Pynocchio provides the flexibility to use your preferred communication protocol:
-
-- **HTTP/HTTPS** 🌐:
-  - Perfect for web-based services and integrations.
-- **WebSockets** ⚡:
-  - Tailored for real-time applications.
-- **MQTT** 🛰:
-  - A top pick for IoT applications.
-- **Custom Protocol** 🔗:
-  - Craft and use your own unique protocol.
-
+2 - **Pynocchio Websocket Client**
 ```python
-# Picking a protocol is a breeze
-remote = pynocchio.RemoteLibrary(protocol=pynocchio.protocols.HTTP)
+import numpy as local_numpy
+import pynocchio as pn
+from pynocchio.producer.abstract import AbstractProducer
+from pynocchio.pointer.abstract import Pointer
+from pynocchio.pointer.object_pointer import GetPointer
+from pynocchio.serde.capnp.deserialize import _deserialize
+from pynocchio.serde.capnp.serialize import _serialize
+from websockets.sync.client import connect
+
+
+
+class WebSocketsProducer(AbstractProducer):
+    def __init__(self):
+        self.socket = connect("ws://localhost:8765")
+        super().__init__()
+
+    def send(self, ptr: Pointer):
+        msg = _serialize(ptr, to_bytes=True)
+        self.socket.send(msg)
+
+    def request(self, ptr: GetPointer):
+        msg = _serialize(ptr, to_bytes=True)
+        self.socket.send(msg)
+        response = self.socket.recv()
+        return _deserialize(response, from_bytes=True)
+
+# Parse Numpy Library and set the Websocket Producer.
+producer = WebSocketsProducer()
+np = pn.control(module=local_numpy, producer=producer)
+
+# Perform remote numpy calls and retrieve the result!
+np.ALLOW_THREADS
+x_ptr = np.array([1, 2, 3, 4, 5, 6])
+x_ptr = x_ptr + x_ptr
+my_result = x_ptr.retrieve()
+producer.socket.close()
 ```
 
 ## 💾 Storage
