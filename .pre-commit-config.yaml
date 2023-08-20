@@ -40,11 +40,11 @@ repos:
     language: system
     types: [python]
 
-  # - id: isort
-  #   name: isort
-  #   entry: poetry run isort -l 79 pynocchio
-  #   language: system
-  #   types: [python]
+  - id: isort
+    name: isort
+    entry: poetry run isort pynocchio
+    language: system
+    types: [python]
 
 
   - id: flake8
