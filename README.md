@@ -21,12 +21,50 @@ pip install pynocchio
 
 ## 🚀 Getting Started
 
-Dive into Pynocchio and tap into its powerful features! This simple guide will help you grasp its core concepts and functionalities.
+Dive into Pynocchio and tap into its powerful features! This simple guide will use virtual **producer (client)** and **consumer (server)** abstractions to help you grasp its core concepts and functionalities.
 
+1 - **Client Side**
 ```python
-import pynocchio
+import pynocchio as pn
+import numpy as local_numpy
 
-remote = pynocchio.RemoteLibrary(...)
+message_queue = []
+reply_queue = {}
+
+
+# Memory Client type
+producer = pn.VirtualProducer(message_queue, reply_queue)
+
+# Mirror all numpy classes, functions and attributes
+np = pn.control(local_numpy, producer)
+
+# Run as if you were executing it locally
+x_ptr = np.array([1, 2, 3])
+y_ptr = np.array([4, 5, 6])
+result = x_ptr + y_ptr
+
+result.retrieve()
+```
+
+2 - **Server Side**
+```python
+import pynocchio as pn
+import numpy as local_numpy
+
+message_queue = []
+reply_queue = {}
+
+# Memory Server Type
+consumer = pn.VirtualConsumer(
+  pn.VirtualStorage(), # Memory Storage Type
+  message_queue,
+  reply_queue)
+
+# Assign the lib tree you'll accept to execute
+pn.serve(local_numpy, consumer)
+
+# Consume Client's requests
+consumer.listen()
 ```
 
 
