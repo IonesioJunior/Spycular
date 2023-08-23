@@ -15,5 +15,9 @@ class AbstractStore(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def delete(self, obj_id):
+        pass
+
+    @abstractmethod
     def has(self, obj_id):
         pass
