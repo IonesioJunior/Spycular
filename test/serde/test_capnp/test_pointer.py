@@ -10,7 +10,7 @@ from pynocchio.pointer.object_pointer import ObjectActionPointer  # noqa: E402
 from pynocchio.pointer.object_pointer import ObjectPointer  # noqa: E402
 from pynocchio.serde.capnp.deserialize import _deserialize  # noqa: E402
 from pynocchio.serde.capnp.serialize import _serialize  # noqa: E402
-from pynocchio.utils import generate_uuid  # noqa: E402
+from pynocchio.utils.uuid_gen import generate_uuid  # noqa: E402
 
 
 def test_function_pointer():
@@ -67,7 +67,7 @@ def test_action_pointer():
     action_ptr = ObjectActionPointer(
         path="numpy.array",
         target_id=generate_uuid(),
-        args=[[1, 2, 3]],
+        args=([1, 2, 3],),
         kwargs={1: "test", "2": [1, 2, 3, 4]},
     )
     serialized_ptr = _serialize(action_ptr, to_bytes=True)

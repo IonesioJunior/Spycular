@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from types import ModuleType
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, Tuple
 
 from ..serde.capnp.recursive import serializable
 from ..store.abstract import AbstractStore
@@ -16,7 +16,7 @@ class ObjectPointer(Pointer):
         self,
         path: str = "",
         pointer_id: str = "",
-        parents: List[Pointer] = [],
+        parents: Tuple[Any, ...] = tuple(),
         broker: Any = None,
         target_id=None,
         register=False,
@@ -36,10 +36,12 @@ class ObjectPointer(Pointer):
         return dict()
 
     def __getattr__(self, name: str) -> ObjectPointer:
+        prefix = self.target_id or self.id
+        path = f"{self.path}.{name}" if self.target_id else name
         return ObjectPointer(
-            target_id=self.target_id if self.target_id else self.id,
-            path=self.path + "." + name if self.target_id else name,
-            parents=[self],
+            target_id=prefix,
+            path=path,
+            parents=(self,),
             broker=self.broker,
         )
 
@@ -49,26 +51,31 @@ class ObjectPointer(Pointer):
         args: tuple = tuple(),
         kwargs: Dict[str, Any] = {},
         temp_obj: ObjectPointer | None = None,
+        parents: Tuple[Any, ...] = tuple(),
     ) -> ObjectPointer:
         obj_action = ObjectActionPointer(
             target_id=self.target_id if self.target_id else self.id,
             path=path,
             args=args,
             kwargs=kwargs,
-            parents=[self],
+            parents=(self,) + parents,
             temp_obj=temp_obj,
         )
         self.broker.send(obj_action)
         obj = ObjectPointer(
             pointer_id=obj_action.id,
-            parents=[self],
+            parents=(self,),
             broker=self.broker,
             register=True,
         )
         return obj
 
     def __call__(self, *args, **kwargs: Dict[str, Any]) -> ObjectPointer:
-        return self.__wrap_pointer_action(self.path, args, kwargs)
+        return self.__wrap_pointer_action(
+            path=self.path,
+            args=args,
+            kwargs=kwargs,
+        )
 
     def __getitem__(self, key: tuple) -> ObjectPointer:
         return self.__wrap_pointer_action(
@@ -88,25 +95,53 @@ class ObjectPointer(Pointer):
         )
 
     def __add__(self, other):
-        return self.__wrap_pointer_action(path="__add__", args=(other,))
+        return self.__wrap_pointer_action(
+            path="__add__",
+            args=(other,),
+            parents=(other,),
+        )
 
     def __sub__(self, other):
-        return self.__wrap_pointer_action(path="__sub__", args=(other,))
+        return self.__wrap_pointer_action(
+            path="__sub__",
+            args=(other,),
+            parents=(other,),
+        )
 
     def __mul__(self, other):
-        return self.__wrap_pointer_action(path="__mul__", args=(other,))
+        return self.__wrap_pointer_action(
+            path="__mul__",
+            args=(other,),
+            parents=(other,),
+        )
 
     def __truediv__(self, other):
-        return self.__wrap_pointer_action(path="__truediv__", args=(other,))
+        return self.__wrap_pointer_action(
+            path="__truediv__",
+            args=(other,),
+            parents=(other,),
+        )
 
     def __floordiv__(self, other):
-        return self.__wrap_pointer_action(path="__floordiv__", args=(other,))
+        return self.__wrap_pointer_action(
+            path="__floordiv__",
+            args=(other,),
+            parents=(other,),
+        )
 
     def __mod__(self, other):
-        return self.__wrap_pointer_action(path="__mod__", args=(other,))
+        return self.__wrap_pointer_action(
+            path="__mod__",
+            args=(other,),
+            parents=(other,),
+        )
 
     def __pow__(self, other):
-        return self.__wrap_pointer_action(path="__pow__", args=(other,))
+        return self.__wrap_pointer_action(
+            path="__pow__",
+            args=(other,),
+            parents=(other,),
+        )
 
     def solve(
         self,
@@ -114,21 +149,22 @@ class ObjectPointer(Pointer):
         storage: AbstractStore | None = None,
         reply_callback: Callable | None = None,
     ) -> None | Any:
+        attrs = self.path.split(".")
+
         if storage:
             # If object is stored, retrieve it.
             if storage.has(self.id):
                 return storage.get(self.id)
-            # If object isn't stored but poiting to another object.
+            # If object isn't stored but pointing to another object.
             elif storage.has(self.target_id):
                 obj = storage.get(self.target_id)
-                for attr in self.path.split("."):
+                for attr in attrs:
                     obj = getattr(obj, attr)
             # If object isn't stored and isn't pointing to another object.
             # Process it and save it
             else:
                 obj = lib
-
-                for attr in self.path.split("."):
+                for attr in attrs:
                     obj = getattr(obj, attr)
 
             storage.save(self.id, obj)
@@ -137,8 +173,7 @@ class ObjectPointer(Pointer):
         # in the storage.
         else:
             obj = lib
-
-            for attr in self.path.split("."):
+            for attr in attrs:
                 obj = getattr(obj, attr)
 
         return obj
@@ -156,7 +191,8 @@ class ObjectPointer(Pointer):
         return obj
 
     def __repr__(self) -> str:
-        return f"<ObjectPointer {self.id}  path={self.path}>"
+        return f"<ObjectPointer {self.id} \
+           path={self.path} parents={self.parents}>"
 
 
 @serializable
@@ -183,7 +219,7 @@ class ObjectActionPointer(Pointer):
         target_id: str,
         path: str = "",
         pointer_id: str = "",
-        parents: List[Pointer] = [],
+        parents: Tuple[Any, ...] = tuple(),
         args: tuple[Any, ...] = tuple(),
         kwargs: Dict[str, Any] = {},
         temp_obj: ObjectPointer | None = None,
@@ -197,9 +233,9 @@ class ObjectActionPointer(Pointer):
 
     def __repr__(self) -> str:
         return f"<ObjectActionPointer {self.id} \
-        target_id={self.target_id}  path={self.path} \
-        args={self.args}  kwargs={self.kwargs} \
-        temp_obj={self.temp_obj}>"
+       target_id={self.target_id}  path={self.path} \
+       args={self.args}  kwargs={self.kwargs} \
+       temp_obj={self.temp_obj}>"
 
     def solve(
         self,
