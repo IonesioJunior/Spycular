@@ -3,7 +3,7 @@ from types import ModuleType
 from typing import Any, Callable, Union
 
 from ..store.abstract import AbstractStore
-from ..utils import generate_uuid
+from ..utils.uuid_gen import generate_uuid
 
 
 class Pointer(metaclass=ABCMeta):
