@@ -11,5 +11,8 @@ class VirtualStore(AbstractStore):
     def save(self, obj_id, obj):
         self.store[obj_id] = obj
 
+    def delete(self, obj_id):
+        del self.store[obj_id]
+
     def has(self, obj_id):
         return obj_id in self.store.keys()
