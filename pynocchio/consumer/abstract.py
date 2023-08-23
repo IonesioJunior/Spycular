@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from types import ModuleType
 
 from ..pointer.abstract import Pointer
+from ..pointer.graph.abstract import PointerGraph
 from ..puppetry.puppet import Puppet
 
 
@@ -15,6 +16,10 @@ class AbstractConsumer(metaclass=ABCMeta):
 
     @abstractmethod
     def execute(self, ptr: Pointer):
+        pass
+
+    @abstractmethod
+    def execute_graph(self, ptr: PointerGraph):
         pass
 
     @abstractmethod
