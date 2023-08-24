@@ -21,7 +21,7 @@ recursive_scheme = get_capnp_schema(
 
 
 def serializable(cls):
-    """Decorator to make a class serializable"""
+    """Decorator to make a class serializable."""
     exclude = getattr(cls, "__exclude__", [])
     recursive_serde_register(
         cls,
@@ -32,7 +32,7 @@ def serializable(cls):
 
 
 def get_fully_qualified_name(obj: object) -> str:
-    """Return the full path and name of a class
+    """Return the full path and name of a class.
 
     Sometimes we want to return the entire path and name encoded
     using periods.
@@ -42,7 +42,6 @@ def get_fully_qualified_name(obj: object) -> str:
 
     Returns:
         the full path and name of the object
-
     """
 
     fqn = obj.__class__.__module__
@@ -78,28 +77,24 @@ def get_types(
 
 
 def check_fqn_alias(cls: Union[object, type]) -> Optional[tuple]:
-    """Currently, typing.Any has different metaclasses in
-    different versions of Python 🤦‍♂️.
-    For Python <=3.10
-    Any is an instance of typing._SpecialForm
+    """Currently, typing.Any has different metaclasses in different
+    versions of Python 🤦‍♂️. For Python <=3.10 Any is an instance of
+    typing._SpecialForm.
 
-    For Python >=3.11
-    Any is an instance of typing._AnyMeta
-    Hence adding both the aliases to the type bank.
+    For Python >=3.11 Any is an instance of typing._AnyMeta Hence adding both
+    the aliases to the type bank.
 
-    This would cause issues, when the server and client
-    have different python versions.
+    This would cause issues, when the server and client have different python
+    versions.
 
-    As their serde is same, we can use the same serde for both of them.
-    with aliases for  fully qualified names in type bank
+    As their serde is same, we can use the same serde for both of them. with
+    aliases for  fully qualified names in type bank
 
     In a similar manner for Enum.
 
-    For Python<=3.10:
-    Enum is metaclass of enum.EnumMeta
+    For Python<=3.10: Enum is metaclass of enum.EnumMeta
 
-    For Python>=3.11:
-    Enum is metaclass of enum.EnumType
+    For Python>=3.11: Enum is metaclass of enum.EnumType
     """
     if cls == Any:
         return ("typing._AnyMeta", "typing._SpecialForm")

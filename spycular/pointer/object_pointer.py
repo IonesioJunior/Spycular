@@ -10,6 +10,14 @@ from .abstract import Pointer
 
 @serializable
 class ObjectPointer(Pointer):
+    """A pointer representation for an object, supporting a range of
+    Python magic methods to emulate object behavior, while remaining a
+    pointer.
+
+    The main use case is for remote or deferred execution where the real
+    objects might be elsewhere.
+    """
+
     __exclude__ = ["broker"]
 
     def __init__(
@@ -21,6 +29,16 @@ class ObjectPointer(Pointer):
         target_id=None,
         register=False,
     ):
+        """Initialize an ObjectPointer.
+
+        Args:
+            path (str): Path to the object.
+            pointer_id (str): ID for the pointer.
+            parents (Tuple): Ancestral pointers leading to this pointer.
+            broker (Any): Broker facilitating communication.
+            target_id: The ID of the target object.
+            register (bool): Whether this object is registered.
+        """
         super().__init__(path, pointer_id)
         self.parents = parents
         self.broker = broker
@@ -29,10 +47,18 @@ class ObjectPointer(Pointer):
 
     @property
     def args(self) -> tuple[Any, ...]:
+        """
+        Returns:
+            tuple: Arguments for the object.
+        """
         return tuple()
 
     @property
     def kwargs(self) -> Dict[str, Any]:
+        """
+        Returns:
+            dict: Keyword arguments for the object.
+        """
         return dict()
 
     def __getattr__(self, name: str) -> ObjectPointer:
@@ -53,6 +79,24 @@ class ObjectPointer(Pointer):
         temp_obj: ObjectPointer | None = None,
         parents: Tuple[Any, ...] = tuple(),
     ) -> ObjectPointer:
+        """Create and send an ObjectActionPointer based on the provided
+        arguments, then return a new ObjectPointer associated with that
+        action.
+
+        Args:
+            path (str): The path to the object action.
+            args (tuple, optional):  ObjectAction positional args.
+            Defaults to an empty tuple.
+            kwargs (Dict[str, Any], optional): ObjectAction keyword args.
+            Defaults to an empty dictionary.
+            temp_obj (ObjectPointer, optional): A temporary object for storing
+            intermediate states. Defaults to None.
+            parents (Tuple[Any, ...], optional): Ancestral pointers leading to
+            this action. By default, it only includes the current object.
+
+        Returns:
+            ObjectPointer: A new ObjectPointer associated with the action.
+        """
         obj_action = ObjectActionPointer(
             target_id=self.target_id if self.target_id else self.id,
             path=path,
@@ -71,6 +115,14 @@ class ObjectPointer(Pointer):
         return obj
 
     def __call__(self, *args, **kwargs: Dict[str, Any]) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer call.
+
+        Args:
+            args (tuple, optional): Positional args for object the action.
+            Defaults to an empty tuple.
+            kwargs (Dict[str, Any], optional): Keyword args for object action.
+            Defaults to an empty dictionary.
+        """
         return self.__wrap_pointer_action(
             path=self.path,
             args=args,
@@ -78,6 +130,11 @@ class ObjectPointer(Pointer):
         )
 
     def __getitem__(self, key: tuple) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer __getitem__.
+
+        Args:
+            key (tuple): Key used to get the proper item.
+        """
         return self.__wrap_pointer_action(
             path=self.path + "." + "__getitem__"
             if self.target_id
@@ -89,47 +146,88 @@ class ObjectPointer(Pointer):
         )
 
     def __setitem__(self, key: tuple, value: Any) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer __setitem__.
+
+        Args:
+            key (tuple): Key used to set the proper item.
+        """
         return self.__wrap_pointer_action(
             path="__setitem__",
             args=(key, value),
         )
 
-    def __add__(self, other):
+    def __add__(self, other: Any) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer add
+        operation.
+
+        Args:
+            other (Any): Object used to perform add operation.
+        """
         return self.__wrap_pointer_action(
             path="__add__",
             args=(other,),
             parents=(other,),
         )
 
-    def __sub__(self, other):
+    def __sub__(self, other: Any) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer sub
+        operation.
+
+        Args:
+            other (Any): Object used to perform sub operation.
+        """
         return self.__wrap_pointer_action(
             path="__sub__",
             args=(other,),
             parents=(other,),
         )
 
-    def __mul__(self, other):
+    def __mul__(self, other: Any) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer mul
+        operation.
+
+        Args:
+            other (Any): Object used to perform mul operation.
+        """
         return self.__wrap_pointer_action(
             path="__mul__",
             args=(other,),
             parents=(other,),
         )
 
-    def __truediv__(self, other):
+    def __truediv__(self, other: Any) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer __truediv__
+        operation.
+
+        Args:
+            other (Any): Object used to perform __truediv__ operation.
+        """
         return self.__wrap_pointer_action(
             path="__truediv__",
             args=(other,),
             parents=(other,),
         )
 
-    def __floordiv__(self, other):
+    def __floordiv__(self, other: Any) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer __floordiv__
+        operation.
+
+        Args:
+            other (Any): Object used to perform __floordiv__ operation.
+        """
         return self.__wrap_pointer_action(
             path="__floordiv__",
             args=(other,),
             parents=(other,),
         )
 
-    def __mod__(self, other):
+    def __mod__(self, other: Any) -> ObjectPointer:
+        """Dunder method that aims to represent any pointer __mod__
+        operation.
+
+        Args:
+            other (Any): Object used to perform __mod__ operation.
+        """
         return self.__wrap_pointer_action(
             path="__mod__",
             args=(other,),
@@ -137,6 +235,12 @@ class ObjectPointer(Pointer):
         )
 
     def __pow__(self, other):
+        """Dunder method that aims to represent any pointer __pow__
+        operation.
+
+        Args:
+            other (Any): Object used to perform __pow__ operation.
+        """
         return self.__wrap_pointer_action(
             path="__pow__",
             args=(other,),
@@ -149,6 +253,26 @@ class ObjectPointer(Pointer):
         storage: AbstractStore | None = None,
         reply_callback: Callable | None = None,
     ) -> None | Any:
+        """ObjectPointer abstract method implementation to resolve this
+        Object Pointer.
+
+        This method aims to resolve the object pointed by this Object Pointer.
+        This is how each pointer in our stack knows how to solve themselves.
+
+        In case of ObjectPointer, we'll try to retrieve the object from the
+        storage. If it's not there, we'll try to retrieve the object pointed
+        by this Object Pointer (by target_id). If it's not there either, we'll
+        process the object and save it in the storage.
+
+        Args:
+            lib (ModuleType): The module the consumer is reflecting.
+            storage (AbstractStore, optional): The storage  where we'll
+            get/retrieve data. Defaults to None.
+            reply_callback (Callable, optional): The callback to reply
+            to the broker. Defaults to None.
+        Returns:
+            None | Any: The object pointed by this Object Pointer.
+        """
         attrs = self.path.split(".")
 
         if storage:
@@ -179,11 +303,22 @@ class ObjectPointer(Pointer):
         return obj
 
     def register(self) -> ObjectPointer:
+        """Force register this Object Pointer. In case it wasn't
+        registered before.
+
+        Returns:
+            ObjectPointer: This Object Pointer.
+        """
         self.broker.send(self)
         self.__registered = True
         return self
 
     def retrieve(self) -> None | ObjectPointer:
+        """Retrieve the Object Pointer value from the consumer.
+
+        Returns:
+            None | ObjectPointer: The Object Pointer value.
+        """
         if not self.__registered:
             self.register()
 
@@ -191,13 +326,28 @@ class ObjectPointer(Pointer):
         return obj
 
     def __repr__(self) -> str:
+        """Object Pointer representation.
+
+        Returns:
+            str: Object Pointer representation.
+        """
         return f"<ObjectPointer {self.id} \
            path={self.path} parents={self.parents}>"
 
 
 @serializable
 class GetPointer(Pointer):
+    """A specialized pointer that requests or fetches a target object
+    based on its ID."""
+
     def __init__(self, target_id: str, path: str = "", pointer_id: str = ""):
+        """Initialize a GetPointer.
+
+        Args:
+            target_id (str): The ID of the target object to get.
+            path (str): Path to the object. Optional.
+            pointer_id (str): ID for the pointer. Optional.
+        """
         super().__init__(path, pointer_id)
         self.target_id = target_id
 
@@ -207,6 +357,25 @@ class GetPointer(Pointer):
         storage: AbstractStore | None = None,
         reply_callback: Callable | None = None,
     ) -> None | Any:
+        """GetPointer abstract method implementation to resolve this
+        Object Pointer.
+
+        This method aims to resolve the object pointed by this GetPointer.
+        This is how each pointer in our stack knows how to solve themselves.
+
+        In case of GetPointer, we'll try to retrieve the object from the
+        storage. If it's not there, we'll try to retrieve the object
+        pointed by this GetPointer.
+
+        Args:
+            lib (ModuleType): The module the consumer is reflecting.
+            storage (AbstractStore, optional): The storage  where we'll
+            get/retrieve data. Defaults to None.
+            reply_callback (Callable, optional): The callback to reply to
+            the broker. Defaults to None.
+        Returns:
+            None | Any: The object pointed by this Object Pointer.
+        """
         if storage and storage.has(self.target_id) and reply_callback:
             reply_callback(self.target_id, storage.get(self.target_id))
         return None
@@ -214,6 +383,13 @@ class GetPointer(Pointer):
 
 @serializable
 class ObjectActionPointer(Pointer):
+    """Represents a pointer that is intended to perform an action on the
+    object it points to.
+
+    This action can be calling a method, accessing an attribute, or performing
+    an operation.
+    """
+
     def __init__(
         self,
         target_id: str,
@@ -224,6 +400,19 @@ class ObjectActionPointer(Pointer):
         kwargs: Dict[str, Any] = {},
         temp_obj: ObjectPointer | None = None,
     ):
+        """Initialize an ObjectActionPointer.
+
+        Args:
+            target_id (str): The ID of the target object.
+            path (str): Path to the object action.
+            pointer_id (str): ID for the pointer.
+            parents (Tuple): Ancestral pointers leading to this
+            action pointer.
+            args (tuple): Arguments for the object action.
+            kwargs (dict): Keyword arguments for the object action.
+            temp_obj (ObjectPointer): Temporary object for storing
+            intermediate states.
+        """
         super().__init__(path, pointer_id)
         self.parents = parents
         self.args = args
@@ -243,6 +432,28 @@ class ObjectActionPointer(Pointer):
         storage: AbstractStore | None = None,
         reply_callback: Callable | None = None,
     ) -> None | Any:
+        """ActionPointer abstract method implementation to resolve this
+        Object Pointer.
+
+        This method aims to resolve the object pointed by this ActionPointer.
+        This is how each pointer in our stack knows how to solve themselves.
+
+        In case of ActionPointer, each ActionPointer represents an action to
+        be performed on the object pointed by this ActionPointer. We'll try to
+        retrieve the object from the storage. If it's not there, we'll try to
+        retrieve the object pointed by this ActionPointer (by target_id).
+        If it's not there either, we'll process the object and save it in
+        the storage.
+
+        Args:
+            lib (ModuleType): The module the consumer is reflecting.
+            storage (AbstractStore, optional): The storage  where we'll get or
+            retrieve data. Defaults to None.
+            reply_callback (Callable, optional): The callback to reply to the
+            broker. Defaults to None.
+        Returns:
+            None | Any: The object pointed by this Object Pointer.
+        """
         if storage:
             if self.temp_obj:
                 obj = self.temp_obj.solve(lib)

@@ -55,6 +55,13 @@ repos:
     types: [python]
     args: [--count, .]
 
+  - id: docformatter
+    name: Docformatter Checking
+    entry: poetry run docformatter --check --wrap-summaries 72 --wrap-descriptions 79 --recursive spycular
+    language: system
+    types: [python]
+    pass_filenames: false
+
   - id: mypy
     name: Validate types with MyPy
     entry: poetry run mypy

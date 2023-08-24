@@ -15,6 +15,32 @@ from ..producer.abstract import AbstractProducer
 
 
 class Puppeteer:
+    """Puppeteer dynamically mirrors the structure of a given module or
+    class.
+
+    It creates placeholders (or 'puppets') for the members of the module
+    or class, allowing for dynamic interaction and control over the
+    mirrored module or class.
+
+    Attributes:
+        callable_members (Set[Callable]): A set of all callable members.
+        variable_members (List[Any]): A list of non-callable members.
+        class_members (Set[Type[Any]]): A set of class-type members.
+        remains (List[Any]): Members that don't fit into the previous sets.
+        path (str): The current path or namespace of the puppeteer instance.
+        modules (Set[ModuleType]): Modules that have been processed or are
+        being processed.
+        broker (AbstractProducer): An instance responsible for producing
+        module tasks/events.
+
+    Methods:
+        _mirror_class: Mirrors the structure of the provided module.
+        placeholder_class: Creates a placeholder for a class-type member.
+        inject_callable_member: Generates a placeholder function or method.
+        placeholder_module: Creates a puppeteer instance for another module.
+        placeholder_variable: Creates a placeholder for a variable member.
+    """
+
     def __init__(
         self,
         lib,
@@ -22,6 +48,15 @@ class Puppeteer:
         modules=set(),
         parent_path: str = "",
     ):
+        """Initializes the Puppeteer instance.
+
+        Args:
+            lib: The target library or module to mirror.
+            broker: An instance responsible for producing module tasks/events.
+            modules (set, optional): Previously processed modules.
+            parent_path (str, optional): The parent namespace or path for
+            the current Puppeteer instance. Defaults to an empty string.
+        """
         self.callable_members: Set[Callable] = set()
         self.variable_members: List[Any] = list()
         self.class_members: Set[Type[Any]] = set()
@@ -32,7 +67,18 @@ class Puppeteer:
         self._mirror_class(lib, parent_path)
 
     def _mirror_class(self, lib, parent_path: str = ""):
-        """'This method creates a placeholder for module's member."""
+        """Reflects or mirrors the structure of the provided library or
+        module.
+
+        Iterates over the members of the library/module and creates
+        placeholders for each member based on its type (function, method,
+        class, module, variable, etc.)
+
+        Args:
+            lib: The target library or module to mirror.
+            parent_path (str): The namespace or path for the current
+            mirroring process.
+        """
         self.modules.add(lib)
         # Iterates over the target module members
         try:
@@ -104,6 +150,26 @@ class Puppeteer:
 
     @staticmethod
     def inject_callable_member(member, path, broker) -> Callable:
+        """Generates and returns a placeholder function or method for a
+        given callable member.
+
+        Depending on the type of the provided member (function, method,
+        or builtin), the method creates a corresponding placeholder to mimic
+        its behavior. When the placeholder is called, it interacts with the
+        provided broker and follows a specified path.
+
+        Args:
+            member: Original callable member (function, method, or builtin)
+            for which the placeholder is to be created.
+            path (str): Specific mirrored module path/namespace.
+            broker: An instance responsible for producing module tasks/events.
+
+        Returns:
+            Callable: A placeholder function/method mimicking the original.
+
+        Raises:
+            None: This method does not explicitly raise any exceptions.
+        """
         result_function = None
         if inspect.isfunction(member):
 
@@ -158,6 +224,22 @@ class Puppeteer:
 
     @staticmethod
     def placeholder_module(member, path, modules, broker) -> Puppeteer:
+        """Create and return a Puppeteer instance for a given module
+        member.
+
+        This method mirrors the structure and behavior of a module within
+        the Puppeteer context, essentially acting as a placeholder for
+        that module.
+
+        Args:
+            member: Module for which the Puppeteer instance is to be created.
+            path (str): Specific mirrored module path/namespace.
+            modules (Set[ModuleType]): Modules already processed.
+            broker: An instance responsible for producing module tasks/events.
+
+        Returns:
+            Puppeteer: A new Puppeteer instance representing the given module.
+        """
         return Puppeteer(
             lib=member,
             modules=modules,
@@ -167,4 +249,19 @@ class Puppeteer:
 
     @staticmethod
     def placeholder_variable(path, broker) -> ObjectPointer:
+        """Create and return an ObjectPointer as a placeholder for a
+        variable.
+
+        This method produces a proxy representation of a variable in the
+        Puppeteer context.The generated ObjectPointer acts as a stand-in
+        for the original variable, facilitating its interactions and
+        management within the Puppeteer system.
+
+        Args:
+            path (str): Specific mirrored module path/namespace.
+            broker: An instance responsible for producing module tasks/events.
+
+        Returns:
+            ObjectPointer: A new pointer representing the given variable.
+        """
         return ObjectPointer(path=path, broker=broker)
