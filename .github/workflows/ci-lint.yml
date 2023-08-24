@@ -29,3 +29,5 @@ jobs:
       run: poetry run flake8 --count spycular
     - name: Run MyPy
       run: poetry run mypy spycular
+    - name: Run Docformatter
+      run: poetry run docformatter --check --wrap-summaries 72 --wrap-descriptions 79 --recursive spycular
