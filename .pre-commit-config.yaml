@@ -36,13 +36,13 @@ repos:
 
   - id: black
     name: Format with Black
-    entry: poetry run black pynocchio
+    entry: poetry run black spycular
     language: system
     types: [python]
 
   - id: isort
     name: isort
-    entry: poetry run isort pynocchio
+    entry: poetry run isort spycular
     language: system
     types: [python]
 
@@ -62,4 +62,4 @@ repos:
     types: [python]
     pass_filenames: false
     args:
-    - "pynocchio"
+    - "spycular"

@@ -1,10 +1,10 @@
 import pytest
 
 local_numpy = pytest.importorskip("numpy")
-from pynocchio import control, serve  # noqa: E402
-from pynocchio.consumer.virtual_consumer import VirtualConsumer  # noqa: E402
-from pynocchio.producer.virtual_producer import VirtualProducer  # noqa: E402
-from pynocchio.store.virtual_store import VirtualStore  # noqa: E402
+from spycular import control, serve  # noqa: E402
+from spycular.consumer.virtual_consumer import VirtualConsumer  # noqa: E402
+from spycular.producer.virtual_producer import VirtualProducer  # noqa: E402
+from spycular.store.virtual_store import VirtualStore  # noqa: E402
 
 message_queue = []
 reply_queue = {}

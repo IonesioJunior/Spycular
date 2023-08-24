@@ -1,11 +1,10 @@
 import asyncio
 from typing import Callable, Set
 
-from pynocchio.pointer.abstract import Pointer
-
 from ...puppetry.puppet import Puppet
 from ...serde.capnp.recursive import serializable
 from ...store.abstract import AbstractStore
+from ..abstract import Pointer
 from .abstract import PointerGraph
 from .state_enum import PointerState
 

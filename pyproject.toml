@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "pynocchio"
+name = "spycular"
 version = "0.1.0"
-description = ""
+description = "Spycular offers an innovative way to use Python libraries remotely through RPC. Inspired by the idea of specular reflection, it provides unparalleled flexibility, allowing you to customize the communication protocol, serialization method, and even the way objects are managed and stored on the remote side."
 authors = ["Ionesio Junior <ionesiojr@gmail.com>"]
 readme = "README.md"
 license = "Apache-2.0"
-homepage = "https://example.com/pynocchio"
-repository = "https://github.com/username/pynocchio"
-documentation = "https://example.com/pynocchio/docs"
+homepage = "https://github.com/IonesioJunior/Spycular"
+repository = "https://github.com/IonesioJunior/Spycular"
+documentation = "https://github.com/IonesioJunior/Spycular"
 
 
 

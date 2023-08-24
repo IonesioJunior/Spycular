@@ -2,15 +2,15 @@ import pytest
 
 capnp = pytest.importorskip("capnp")
 
-from pynocchio.pointer.callable_pointer import BuiltinPointer  # noqa: E402
-from pynocchio.pointer.callable_pointer import FunctionPointer  # noqa: E402
-from pynocchio.pointer.callable_pointer import MethodPointer  # noqa: E402
-from pynocchio.pointer.object_pointer import GetPointer  # noqa: E402
-from pynocchio.pointer.object_pointer import ObjectActionPointer  # noqa: E402
-from pynocchio.pointer.object_pointer import ObjectPointer  # noqa: E402
-from pynocchio.serde.capnp.deserialize import _deserialize  # noqa: E402
-from pynocchio.serde.capnp.serialize import _serialize  # noqa: E402
-from pynocchio.utils.uuid_gen import generate_uuid  # noqa: E402
+from spycular.pointer.callable_pointer import BuiltinPointer  # noqa: E402
+from spycular.pointer.callable_pointer import FunctionPointer  # noqa: E402
+from spycular.pointer.callable_pointer import MethodPointer  # noqa: E402
+from spycular.pointer.object_pointer import GetPointer  # noqa: E402
+from spycular.pointer.object_pointer import ObjectActionPointer  # noqa: E402
+from spycular.pointer.object_pointer import ObjectPointer  # noqa: E402
+from spycular.serde.capnp.deserialize import _deserialize  # noqa: E402
+from spycular.serde.capnp.serialize import _serialize  # noqa: E402
+from spycular.utils.uuid_gen import generate_uuid  # noqa: E402
 
 
 def test_function_pointer():

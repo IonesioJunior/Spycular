@@ -16,15 +16,6 @@ class PointerGraph(metaclass=ABCMeta):
         self.__build_execution_graph(pointers)
 
     @abstractmethod
-    def solve(
-        self,
-        puppet: Puppet,
-        storage: AbstractStore | None = None,
-        reply_callback: Callable | None = None,
-    ) -> None:
-        pass
-
-    @abstractmethod
     async def async_solve(
         self,
         puppet: Puppet,

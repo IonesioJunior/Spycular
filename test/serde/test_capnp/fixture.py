@@ -1,6 +1,6 @@
 import pytest
 
-from pynocchio.producer.virtual_producer import VirtualProducer  # noqa: E402
+from spycular.producer.virtual_producer import VirtualProducer  # noqa: E402
 
 message_queue = []
 reply_queue = {}
