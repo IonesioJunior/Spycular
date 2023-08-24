@@ -10,7 +10,7 @@ class VirtualConsumer(AbstractConsumer):
     interacts virtually with message and reply queues.
 
     This class can listen to messages, execute them, and handle replies using
-    the underlying puppet module and storage system.
+    the underlying reflected module and storage system.
     """
 
     def __init__(self, storage, message_queue, reply_queue):
@@ -47,13 +47,13 @@ class VirtualConsumer(AbstractConsumer):
             await self.execute_graph(graph)
 
     def execute(self, ptr: Pointer):
-        """Execute operations on the given pointer using the puppet
+        """Execute operations on the given pointer using the reflected
         module.
 
         Args:
             ptr (Pointer): Pointer instance pointing to a specific resource.
         """
-        self.puppet_module.execute(
+        self.reflected_module.execute(
             pointer=ptr,
             storage=self.storage,
             reply_callback=self.reply,
@@ -61,14 +61,14 @@ class VirtualConsumer(AbstractConsumer):
 
     async def execute_graph(self, graph: PointerGraph):
         """Asynchronously execute operations on a given pointer graph
-        using the puppet module.
+        using the reflected module.
 
         Args:
             graph (PointerGraph): PointerGraph instance representing a set
             of resources.
         """
         await graph.async_solve(
-            puppet=self.puppet_module,
+            reflected_module=self.reflected_module,
             storage=self.storage,
             reply_callback=self.reply,
         )

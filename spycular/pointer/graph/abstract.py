@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from typing import Callable, Dict, List, Set
 
-from ...puppetry.puppet import Puppet
+from ...reflection.reflected import ReflectedModule
 from ...serde.capnp.recursive import serializable
 from ...store.abstract import AbstractStore
 from ..abstract import Pointer
@@ -18,7 +18,7 @@ class PointerGraph(metaclass=ABCMeta):
     @abstractmethod
     async def async_solve(
         self,
-        puppet: Puppet,
+        reflected_module: ReflectedModule,
         storage: AbstractStore | None = None,
         reply_callback: Callable | None = None,
     ) -> None:

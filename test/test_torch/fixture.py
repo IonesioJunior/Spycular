@@ -2,7 +2,7 @@ import pytest
 
 local_torch = pytest.importorskip("torch")
 
-from spycular import control, serve  # noqa: E402
+from spycular import reflect, strike  # noqa: E402
 from spycular.consumer.virtual_consumer import VirtualConsumer  # noqa: E402
 from spycular.producer.virtual_producer import VirtualProducer  # noqa: E402
 from spycular.store.virtual_store import VirtualStore  # noqa: E402
@@ -17,7 +17,7 @@ def th():
         message_queue=torch_message_queue,
         reply_queue=torch_reply_queue,
     )
-    return control(local_torch, pub)
+    return strike(local_torch, pub)
 
 
 @pytest.fixture
@@ -27,7 +27,7 @@ def torch_consumer():
         message_queue=torch_message_queue,
         reply_queue=torch_reply_queue,
     )
-    return serve(local_torch, consumer)
+    return reflect(local_torch, consumer)
 
 
 @pytest.fixture

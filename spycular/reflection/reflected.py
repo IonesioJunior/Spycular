@@ -7,14 +7,14 @@ from ..pointer.object_pointer import ObjectActionPointer
 from ..store.abstract import AbstractStore
 
 
-class Puppet:
-    """Puppet manages and executes pointers relative to an external
-    library or module.
+class ReflectedModule:
+    """ReflectedModule manages and executes pointers relative to an
+    external library or module.
 
-    The Puppet class is responsible for taking pointers which might represent
-    actions or callable tasks and ensuring they are executed in the context of
-    a given library/module. It can also handle nested pointers, iterating
-    through them recursively and resolving their arguments.
+    The ReflectedModule class is responsible for taking pointers which might
+    represent actions or callable tasks and ensuring they are executed in the
+    context of a given library/module. It can also handle nested pointers,
+    iterating through them recursively and resolving their arguments.
 
     Attributes:
         _original_module (ModuleType): The external library or module in which
@@ -27,7 +27,8 @@ class Puppet:
     """
 
     def __init__(self, lib: ModuleType):
-        """Initialize the Puppet with an external library or module.
+        """Initialize the ReflectedModule with an external library or
+        module.
 
         Args:
             lib (ModuleType): The original library or module.

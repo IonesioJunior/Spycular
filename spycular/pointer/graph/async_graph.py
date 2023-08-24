@@ -1,7 +1,7 @@
 import asyncio
 from typing import Callable, Set
 
-from ...puppetry.puppet import Puppet
+from ...reflection.reflected import ReflectedModule
 from ...serde.capnp.recursive import serializable
 from ...store.abstract import AbstractStore
 from ..abstract import Pointer
@@ -19,7 +19,7 @@ class AsyncPointerGraph(PointerGraph):
         graph_map,
         queue,
         lock,
-        puppet,
+        reflected_module,
         storage,
         reply_callback,
         number,
@@ -27,7 +27,7 @@ class AsyncPointerGraph(PointerGraph):
         while not queue.empty():
             node = await queue.get()
             # graph_map[node].solve(, storage, reply_callback)
-            puppet.execute(
+            reflected_module.execute(
                 pointer=graph_map[node].pointer,
                 storage=storage,
                 reply_callback=reply_callback,
@@ -56,7 +56,7 @@ class AsyncPointerGraph(PointerGraph):
 
     async def async_solve(
         self,
-        puppet: Puppet,
+        reflected_module: ReflectedModule,
         storage: AbstractStore | None = None,
         reply_callback: Callable | None = None,
     ) -> None:
@@ -76,7 +76,7 @@ class AsyncPointerGraph(PointerGraph):
                     queue=queue,
                     lock=graph_changes_lock,
                     number=i,
-                    puppet=puppet,
+                    reflected_module=reflected_module,
                     storage=storage,
                     reply_callback=reply_callback,
                 ),

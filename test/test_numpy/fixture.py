@@ -1,7 +1,7 @@
 import pytest
 
 local_numpy = pytest.importorskip("numpy")
-from spycular import control, serve  # noqa: E402
+from spycular import reflect, strike  # noqa: E402
 from spycular.consumer.virtual_consumer import VirtualConsumer  # noqa: E402
 from spycular.producer.virtual_producer import VirtualProducer  # noqa: E402
 from spycular.store.virtual_store import VirtualStore  # noqa: E402
@@ -13,7 +13,7 @@ reply_queue = {}
 @pytest.fixture
 def np():
     pub = VirtualProducer(message_queue=message_queue, reply_queue=reply_queue)
-    return control(local_numpy, pub)
+    return strike(local_numpy, pub)
 
 
 @pytest.fixture
@@ -23,7 +23,7 @@ def consumer():
         message_queue=message_queue,
         reply_queue=reply_queue,
     )
-    return serve(local_numpy, consumer)
+    return reflect(local_numpy, consumer)
 
 
 @pytest.fixture

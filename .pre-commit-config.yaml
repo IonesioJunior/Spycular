@@ -56,8 +56,8 @@ repos:
     args: [--count, .]
 
   - id: docformatter
-    name: Docformatter Checking
-    entry: poetry run docformatter --check --wrap-summaries 72 --wrap-descriptions 79 --recursive spycular
+    name: Docformatter Fixing
+    entry: poetry run docformatter -i --wrap-summaries 72 --wrap-descriptions 79 --recursive spycular
     language: system
     types: [python]
     pass_filenames: false

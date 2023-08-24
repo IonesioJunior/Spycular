@@ -2,13 +2,13 @@ from types import ModuleType
 
 from .consumer.abstract import AbstractConsumer
 from .producer.abstract import AbstractProducer
-from .puppetry.puppeteer import Puppeteer
+from .reflection.incident import IncidentModule
 
 
-def control(module: ModuleType, producer: AbstractProducer):
-    return Puppeteer(lib=module, broker=producer)
+def strike(module: ModuleType, producer: AbstractProducer):
+    return IncidentModule(lib=module, broker=producer)
 
 
-def serve(module: ModuleType, consumer: AbstractConsumer):
+def reflect(module: ModuleType, consumer: AbstractConsumer):
     consumer.set_module(module)
     return consumer

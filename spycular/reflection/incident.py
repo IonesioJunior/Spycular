@@ -14,11 +14,11 @@ from ..pointer.object_pointer import ObjectPointer
 from ..producer.abstract import AbstractProducer
 
 
-class Puppeteer:
-    """Puppeteer dynamically mirrors the structure of a given module or
-    class.
+class IncidentModule:
+    """IncidentModule dynamically mirrors the structure of a given
+    module or class.
 
-    It creates placeholders (or 'puppets') for the members of the module
+    It creates placeholders (or 'reflections') for the members of the module
     or class, allowing for dynamic interaction and control over the
     mirrored module or class.
 
@@ -27,7 +27,7 @@ class Puppeteer:
         variable_members (List[Any]): A list of non-callable members.
         class_members (Set[Type[Any]]): A set of class-type members.
         remains (List[Any]): Members that don't fit into the previous sets.
-        path (str): The current path or namespace of the puppeteer instance.
+        path (str): The current path or namespace of the module instance.
         modules (Set[ModuleType]): Modules that have been processed or are
         being processed.
         broker (AbstractProducer): An instance responsible for producing
@@ -37,7 +37,7 @@ class Puppeteer:
         _mirror_class: Mirrors the structure of the provided module.
         placeholder_class: Creates a placeholder for a class-type member.
         inject_callable_member: Generates a placeholder function or method.
-        placeholder_module: Creates a puppeteer instance for another module.
+        placeholder_module: Creates a incident instance for another module.
         placeholder_variable: Creates a placeholder for a variable member.
     """
 
@@ -48,14 +48,14 @@ class Puppeteer:
         modules=set(),
         parent_path: str = "",
     ):
-        """Initializes the Puppeteer instance.
+        """Initializes the IncidentModule instance.
 
         Args:
             lib: The target library or module to mirror.
             broker: An instance responsible for producing module tasks/events.
             modules (set, optional): Previously processed modules.
             parent_path (str, optional): The parent namespace or path for
-            the current Puppeteer instance. Defaults to an empty string.
+            the current IncidentModule instance. Defaults to an empty string.
         """
         self.callable_members: Set[Callable] = set()
         self.variable_members: List[Any] = list()
@@ -91,7 +91,7 @@ class Puppeteer:
                     or inspect.isbuiltin(member)
                 ):
                     # self.callable_members.add((name, member))
-                    vars(self)[name] = Puppeteer.inject_callable_member(
+                    vars(self)[name] = IncidentModule.inject_callable_member(
                         member,
                         current_path,
                         self.broker,
@@ -102,7 +102,7 @@ class Puppeteer:
                     and member not in self.class_members
                 ):
                     # self.class_members.add((name, member))
-                    vars(self)[name] = Puppeteer.placeholder_class(
+                    vars(self)[name] = IncidentModule.placeholder_class(
                         member,
                         current_path,
                         self.broker,
@@ -113,21 +113,23 @@ class Puppeteer:
                     member,
                 ):
                     if callable(member):
-                        vars(self)[name] = Puppeteer.inject_callable_member(
+                        vars(self)[
+                            name
+                        ] = IncidentModule.inject_callable_member(
                             member,
                             current_path,
                             self.broker,
                         )
                     else:
                         self.variable_members.append((name, member))
-                        vars(self)[name] = Puppeteer.placeholder_variable(
+                        vars(self)[name] = IncidentModule.placeholder_variable(
                             current_path,
                             self.broker,
                         )
                 # If the member is another module
                 elif inspect.ismodule(member) and member not in self.modules:
                     # self.modules.add((name, member))
-                    vars(self)[name] = Puppeteer.placeholder_module(
+                    vars(self)[name] = IncidentModule.placeholder_module(
                         member,
                         current_path,
                         self.modules,
@@ -223,24 +225,24 @@ class Puppeteer:
         return result_function
 
     @staticmethod
-    def placeholder_module(member, path, modules, broker) -> Puppeteer:
-        """Create and return a Puppeteer instance for a given module
-        member.
+    def placeholder_module(member, path, modules, broker) -> IncidentModule:
+        """Create and return a IncidentModule instance for a given
+        module member.
 
         This method mirrors the structure and behavior of a module within
-        the Puppeteer context, essentially acting as a placeholder for
+        the IncidentModule context, essentially acting as a placeholder for
         that module.
 
         Args:
-            member: Module for which the Puppeteer instance is to be created.
+            member: Module for which the IncidentModule is to be created.
             path (str): Specific mirrored module path/namespace.
             modules (Set[ModuleType]): Modules already processed.
             broker: An instance responsible for producing module tasks/events.
 
         Returns:
-            Puppeteer: A new Puppeteer instance representing the given module.
+            IncidentModule: A new IncidentModule representing the given module.
         """
-        return Puppeteer(
+        return IncidentModule(
             lib=member,
             modules=modules,
             parent_path=path,
@@ -253,9 +255,9 @@ class Puppeteer:
         variable.
 
         This method produces a proxy representation of a variable in the
-        Puppeteer context.The generated ObjectPointer acts as a stand-in
+        IncidentModule context.The generated ObjectPointer acts as a stand-in
         for the original variable, facilitating its interactions and
-        management within the Puppeteer system.
+        management within the IncidentModule system.
 
         Args:
             path (str): Specific mirrored module path/namespace.

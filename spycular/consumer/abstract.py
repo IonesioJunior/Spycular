@@ -3,14 +3,14 @@ from types import ModuleType
 
 from ..pointer.abstract import Pointer
 from ..pointer.graph.abstract import PointerGraph
-from ..puppetry.puppet import Puppet
+from ..reflection.reflected import ReflectedModule
 
 
 class AbstractConsumer(metaclass=ABCMeta):
     """An abstract class representing a Consumer.
 
     This class defines the interface for consumers that interact with storage
-    and modules using puppetry and pointers.
+    and modules using reflected module and pointers.
     """
 
     def __init__(self, storage):
@@ -23,13 +23,13 @@ class AbstractConsumer(metaclass=ABCMeta):
         super().__init__()
 
     def set_module(self, module: ModuleType):
-        """Set the module for the consumer and wrap it as a Puppet
-        object.
+        """Set the module for the consumer and wrap it as a
+        ReflectedModule object.
 
         Args:
             module (ModuleType): The python module to be used by the consumer.
         """
-        self.puppet_module = Puppet(module)
+        self.reflected_module = ReflectedModule(module)
 
     @abstractmethod
     def execute(self, ptr: Pointer):

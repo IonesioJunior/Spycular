@@ -1,4 +1,4 @@
-name: Pynocchio Lint
+name: Spycular Lint
 on: [push, pull_request]
 
 jobs:

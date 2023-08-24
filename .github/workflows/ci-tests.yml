@@ -1,4 +1,4 @@
-name: Pynocchio Unit Tests
+name: Spycular Unit Tests
 on: [push, pull_request]
 
 jobs:
