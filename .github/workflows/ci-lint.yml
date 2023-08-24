@@ -22,10 +22,10 @@ jobs:
     - name: Install dependencies
       run: poetry install
     - name: Run black
-      run: poetry run black --check pynocchio
+      run: poetry run black --check spycular
     - name: Run isort
-      run: poetry run isort -c pynocchio
+      run: poetry run isort -c spycular
     - name: Run flake8
-      run: poetry run flake8 --count pynocchio
+      run: poetry run flake8 --count spycular
     - name: Run MyPy
-      run: poetry run mypy pynocchio
+      run: poetry run mypy spycular
