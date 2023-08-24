@@ -12,7 +12,7 @@ Spycular offers an innovative way to use Python libraries remotely through RPC. 
 
 ## 🔧 Installation
 
-📦 Pynocchio is available on PyPI. Get it in no time:
+📦 Spycular is available on PyPI. Get it in no time:
 
 ```bash
 pip install spycular
@@ -21,7 +21,7 @@ pip install spycular
 
 ## 🚀 Getting Started
 
-Dive into Pynocchio and tap into its powerful features! This simple guide will use virtual **producer (client)** and **consumer (server)** abstractions to help you grasp its core concepts and functionalities.
+Dive into Spycular and tap into its powerful features! This simple guide will use virtual **producer (client)** and **consumer (server)** abstractions to help you grasp its core concepts and functionalities.
 
 1 - **Server Side**
 ```python
@@ -32,13 +32,13 @@ message_queue = []
 reply_queue = {}
 
 # Memory Server Type
-consumer = pn.VirtualConsumer(
-  pn.VirtualStorage(), # Memory Storage Type
+consumer = spy.VirtualConsumer(
+  spy.VirtualStorage(), # Memory Storage Type
   message_queue,
   reply_queue)
 
 # Assign the lib tree you'll accept to execute
-pn.serve(local_numpy, consumer)
+spy.serve(local_numpy, consumer)
 
 # Consume Client's requests
 consumer.listen()
@@ -55,10 +55,10 @@ reply_queue = {}
 
 
 # Memory Client type
-producer = pn.VirtualProducer(message_queue, reply_queue)
+producer = spy.VirtualProducer(message_queue, reply_queue)
 
 # Mirror all numpy classes, functions and attributes
-np = pn.control(local_numpy, producer)
+np = spy.control(local_numpy, producer)
 
 # Run as if you were executing it locally
 x_ptr = np.array([1, 2, 3])
@@ -81,8 +81,8 @@ import numpy as local_numpy
 import spycular as spy
 from spycular.consumer.abstract import AbstractConsumer
 from spycular.store.virtual_store import VirtualStore
-from spycular.serde.capnp.deserialize import _deserialize
-from spycular.serde.capnp.serialize import _serialize
+from spycular.serde.caspyp.deserialize import _deserialize
+from spycular.serde.caspyp.serialize import _serialize
 from typing import Any
 from websockets.server import serve
 
@@ -109,7 +109,7 @@ class WebsocketConsumer(AbstractConsumer):
 
 async def listen(websocket):
     consumer = WebsocketConsumer(VirtualStore(), websocket=websocket)
-    pn.serve(module=local_numpy,consumer=consumer)
+    spy.serve(module=local_numpy,consumer=consumer)
     async for message in websocket:
         await consumer.execute(message)
 
@@ -125,12 +125,12 @@ asyncio.run(main())
 2 - **Spycular Websocket Client**
 ```python
 import numpy as local_numpy
-import spycular as pn
+import spycular as spy
 from spycular.producer.abstract import AbstractProducer
 from spycular.pointer.abstract import Pointer
 from spycular.pointer.object_pointer import GetPointer
-from spycular.serde.capnp.deserialize import _deserialize
-from spycular.serde.capnp.serialize import _serialize
+from spycular.serde.caspyp.deserialize import _deserialize
+from spycular.serde.caspyp.serialize import _serialize
 from websockets.sync.client import connect
 
 
@@ -152,7 +152,7 @@ class WebSocketsProducer(AbstractProducer):
 
 # Parse Numpy Library and set the Websocket Producer.
 producer = WebSocketsProducer()
-np = pn.control(module=local_numpy, producer=producer)
+np = spy.control(module=local_numpy, producer=producer)
 
 # Perform remote numpy calls and retrieve the result!
 np.ALLOW_THREADS
@@ -204,7 +204,7 @@ For more detailed insights, head over to our [Wiki](your_wiki_link_here) or peek
 
 ## 🤝 Contributing
 
-Wish to contribute to Pynocchio? Fantastic! Check our [CONTRIBUTING.md](./CONTRIBUTING.md) guide to get started.
+Wish to contribute to Spycular? Fantastic! Check our [CONTRIBUTING.md](./CONTRIBUTING.md) guide to get started.
 
 
 ## 🙏 Acknowledgements
@@ -213,7 +213,7 @@ A massive shoutout to [Name](profile_link) and all our wonderful contributors.
 
 ## 📃 License
 
-Pynocchio is under the Apache 2.0 License. Delve into [LICENSE.md](./LICENSE.md) for all the legalities.
+Spycular is under the Apache 2.0 License. Delve into [LICENSE.md](./LICENSE.md) for all the legalities.
 
 ## 📞 Contact
 
@@ -221,4 +221,4 @@ Queries? Suggestions? Drop us an email at [ionesiojr@gmail.com](mailto:ionesiojr
 
 ## 🎉 Special Thanks
 
-Kudos to all our backers, contributors, and supporters for making Pynocchio a reality. You rock!
+Kudos to all our backers, contributors, and supporters for making Spycular a reality. You rock!
