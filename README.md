@@ -1,6 +1,6 @@
-# Pynocchio: Making remote calls as easy-peasy as pie!
+# Spycular: Making remote calls as easy-peasy as pie!
 
-Pynocchio offers an innovative way to use Python libraries remotely through RPC. Inspired by the idea of puppets and puppeteers, it provides unparalleled flexibility, allowing you to customize the communication protocol, serialization method, and even the way objects are managed and stored on the remote side.
+Spycular offers an innovative way to use Python libraries remotely through RPC. Inspired by the idea of specular reflection, it provides unparalleled flexibility, allowing you to customize the communication protocol, serialization method, and even the way objects are managed and stored on the remote side.
 
 ## 📑 Table of Contents
 
@@ -15,7 +15,7 @@ Pynocchio offers an innovative way to use Python libraries remotely through RPC.
 📦 Pynocchio is available on PyPI. Get it in no time:
 
 ```bash
-pip install pynocchio
+pip install spycular
 ```
 
 
@@ -25,7 +25,7 @@ Dive into Pynocchio and tap into its powerful features! This simple guide will u
 
 1 - **Server Side**
 ```python
-import pynocchio as pn
+import spycular as spy
 import numpy as local_numpy
 
 message_queue = []
@@ -47,7 +47,7 @@ consumer.listen()
 
 2 - **Client Side**
 ```python
-import pynocchio as pn
+import spycular as spy
 import numpy as local_numpy
 
 message_queue = []
@@ -71,18 +71,18 @@ result.retrieve()
 
 ## 📡 Choose how you send and receive the remote calls!
 
-  Picking a protocol is a breeze! Pynocchio provides the flexibility to use your preferred communication protocol. To give an example, this is how we can send and receive our commands using WebSockets.
+  Picking a protocol is a breeze! Spycular provides the flexibility to use your preferred communication protocol. To give an example, this is how we can send and receive our commands using WebSockets.
 
-1 - **Pynocchio Websocket Server**
+1 - **Spycular Websocket Server**
 ```python
 import asyncio
 
 import numpy as local_numpy
-import pynocchio as pn
-from pynocchio.consumer.abstract import AbstractConsumer
-from pynocchio.store.virtual_store import VirtualStore
-from pynocchio.serde.capnp.deserialize import _deserialize
-from pynocchio.serde.capnp.serialize import _serialize
+import spycular as spy
+from spycular.consumer.abstract import AbstractConsumer
+from spycular.store.virtual_store import VirtualStore
+from spycular.serde.capnp.deserialize import _deserialize
+from spycular.serde.capnp.serialize import _serialize
 from typing import Any
 from websockets.server import serve
 
@@ -122,15 +122,15 @@ asyncio.run(main())
 
 ```
 
-2 - **Pynocchio Websocket Client**
+2 - **Spycular Websocket Client**
 ```python
 import numpy as local_numpy
-import pynocchio as pn
-from pynocchio.producer.abstract import AbstractProducer
-from pynocchio.pointer.abstract import Pointer
-from pynocchio.pointer.object_pointer import GetPointer
-from pynocchio.serde.capnp.deserialize import _deserialize
-from pynocchio.serde.capnp.serialize import _serialize
+import spycular as pn
+from spycular.producer.abstract import AbstractProducer
+from spycular.pointer.abstract import Pointer
+from spycular.pointer.object_pointer import GetPointer
+from spycular.serde.capnp.deserialize import _deserialize
+from spycular.serde.capnp.serialize import _serialize
 from websockets.sync.client import connect
 
 
@@ -164,7 +164,7 @@ producer.socket.close()
 
 ## 💾 Storage
 
-Store your way! Pynocchio lets you be in charge:
+Store your way! Spycular lets you be in charge:
 
 - **Relational Databases** 🗃:
   - e.g., MySQL, PostgreSQL
@@ -177,7 +177,7 @@ Store your way! Pynocchio lets you be in charge:
 
 ```python
 # Switching storage backends is straightforward
-remote.configure(storage=pynocchio.storage.MongoDB)
+remote.configure(storage=spycular.storage.MongoDB)
 ```
 
 ## 🔄 Serialization
@@ -195,7 +195,7 @@ Encode and decode your data your way:
 
 ```python
 # Shifting serialization methods is a snap
-remote.configure(serialization=pynocchio.serialization.MessagePack)
+remote.configure(serialization=spycular.serialization.MessagePack)
 ```
 
 ## 📚 Documentation
