@@ -1,4 +1,4 @@
-# Spycular: Making remote calls as easy-peasy as pie!
+# Spycular: Reflecting local calls as smooth as looking in a mirror!
 
 Spycular offers an innovative way to use Python libraries remotely through RPC. Inspired by the idea of specular reflection, it provides unparalleled flexibility, allowing you to customize the communication protocol, serialization method, and even the way objects are managed and stored on the remote side.
 
