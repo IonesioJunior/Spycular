@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from types import ModuleType
+from typing import Any
 
 from ..pointer.abstract import Pointer
 from ..pointer.graph.abstract import PointerGraph
@@ -22,7 +23,7 @@ class AbstractConsumer(metaclass=ABCMeta):
         self.storage = storage
         super().__init__()
 
-    def set_module(self, module: ModuleType):
+    def set_module(self, module: ModuleType) -> None:
         """Set the module for the consumer and wrap it as a
         ReflectedModule object.
 
@@ -32,7 +33,7 @@ class AbstractConsumer(metaclass=ABCMeta):
         self.reflected_module = ReflectedModule(module)
 
     @abstractmethod
-    def execute(self, ptr: Pointer):
+    def execute(self, ptr: Pointer) -> None:
         """Abstract method to execute operations on the given pointer.
 
         Args:
@@ -43,7 +44,7 @@ class AbstractConsumer(metaclass=ABCMeta):
         """
 
     @abstractmethod
-    def execute_graph(self, ptr: PointerGraph):
+    async def execute_graph(self, ptr: PointerGraph) -> None:
         """Abstract method to execute operations on a given pointer
         graph.
 
@@ -56,7 +57,7 @@ class AbstractConsumer(metaclass=ABCMeta):
         """
 
     @abstractmethod
-    def reply(self, obj_id: str, obj: object):
+    def reply(self, obj_id: str, obj: object) -> Any:
         """Abstract method to handle replies with given object ID and
         object.
 

@@ -43,8 +43,8 @@ class IncidentModule:
 
     def __init__(
         self,
-        lib,
-        broker,
+        lib: ModuleType,
+        broker: AbstractProducer,
         modules=set(),
         parent_path: str = "",
     ):
@@ -66,7 +66,7 @@ class IncidentModule:
         self.broker: AbstractProducer = broker
         self._mirror_class(lib, parent_path)
 
-    def _mirror_class(self, lib, parent_path: str = ""):
+    def _mirror_class(self, lib: ModuleType, parent_path: str = ""):
         """Reflects or mirrors the structure of the provided library or
         module.
 
@@ -144,14 +144,18 @@ class IncidentModule:
     @staticmethod
     def placeholder_class(
         cls,
-        parent_path,
-        broker,
-        processed_classes,
+        parent_path: str,
+        broker: AbstractProducer,
+        processed_classes: Set[Type[Any]],
     ) -> ClassPointer:
         return ClassPointer(path=parent_path, broker=broker)
 
     @staticmethod
-    def inject_callable_member(member, path, broker) -> Callable:
+    def inject_callable_member(
+        member: Callable,
+        path: str,
+        broker: AbstractProducer,
+    ) -> Callable:
         """Generates and returns a placeholder function or method for a
         given callable member.
 
@@ -225,7 +229,12 @@ class IncidentModule:
         return result_function
 
     @staticmethod
-    def placeholder_module(member, path, modules, broker) -> IncidentModule:
+    def placeholder_module(
+        member: ModuleType,
+        path: str,
+        modules,
+        broker: AbstractProducer,
+    ) -> IncidentModule:
         """Create and return a IncidentModule instance for a given
         module member.
 
@@ -250,7 +259,7 @@ class IncidentModule:
         )
 
     @staticmethod
-    def placeholder_variable(path, broker) -> ObjectPointer:
+    def placeholder_variable(path, broker: AbstractProducer) -> ObjectPointer:
         """Create and return an ObjectPointer as a placeholder for a
         variable.
 

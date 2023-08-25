@@ -1,3 +1,5 @@
+from typing import Any
+
 from .abstract import AbstractStore
 
 
@@ -18,7 +20,7 @@ class VirtualStore(AbstractStore):
         storage backend."""
         super().__init__(store={})
 
-    def get(self, obj_id):
+    def get(self, obj_id: str) -> Any:
         """Retrieve an object from the store by its ID.
 
         Args:
@@ -29,7 +31,7 @@ class VirtualStore(AbstractStore):
         """
         return self.store.get(obj_id, None)
 
-    def save(self, obj_id, obj):
+    def save(self, obj_id: str, obj: Any):
         """Store an object in the store with a given ID.
 
         Args:
@@ -38,7 +40,7 @@ class VirtualStore(AbstractStore):
         """
         self.store[obj_id] = obj
 
-    def delete(self, obj_id):
+    def delete(self, obj_id: str) -> None:
         """Remove an object from the store using its ID.
 
         Args:
@@ -49,7 +51,7 @@ class VirtualStore(AbstractStore):
         """
         del self.store[obj_id]
 
-    def has(self, obj_id) -> bool:
+    def has(self, obj_id: str) -> bool:
         """Check if the store contains an object with the provided ID.
 
         Args:

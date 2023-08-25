@@ -59,7 +59,7 @@ class VirtualConsumer(AbstractConsumer):
             reply_callback=self.reply,
         )
 
-    async def execute_graph(self, graph: PointerGraph):
+    async def execute_graph(self, graph: PointerGraph) -> None:
         """Asynchronously execute operations on a given pointer graph
         using the reflected module.
 
