@@ -39,6 +39,12 @@ pytest-cov = "^4.1.0"
 pytest-env = "^0.8.2"
 autoflake = "^2.2.0"
 docformatter = "^1.7.5"
+mkdocs = "^1.5.2"
+mkdocs-material = "^9.2.3"
+mkdocs-material-extensions = "^1.1.1"
+mkdocstrings = "^0.22.0"
+mkdocstrings-python = "^1.5.1"
+mkdocs-autorefs = "^0.5.0"
 
 [build-system]
 requires = ["poetry-core"]
