@@ -8,16 +8,24 @@ permissions:
   contents: write
 jobs:
   deploy:
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+        poetry-version: ["1.5"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
-        python-version: 3.x
+        python-version: ${{ matrix.python-version }}
     - uses: actions/cache@v2
       with:
         key: ${{ github.ref }}
         path: .cache
-    - run: pip install mkdocs-material
-    - run: pip install pillow cairosvg
-    - run: mkdocs gh-deploy --force
+    - name: Run image
+      uses: abatilo/actions-poetry@v2
+      with:
+        poetry-version: ${{ matrix.poetry-version }}
+    - name: Install dependencies
+      run: poetry install
+    - run: poetry run mkdocs gh-deploy --force
