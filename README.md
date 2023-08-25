@@ -200,16 +200,12 @@ remote.configure(serialization=spycular.serialization.MessagePack)
 
 ## 📚 Documentation
 
-For more detailed insights, head over to our [Wiki](your_wiki_link_here) or peek into the [docs/](./docs) directory.
+For more detailed insights, head over to our [Wiki](your_wiki_link_here) or peek into our [Documentation](https://ionesiojunior.github.io/Spycular/).
 
 ## 🤝 Contributing
 
 Wish to contribute to Spycular? Fantastic! Check our [CONTRIBUTING.md](./CONTRIBUTING.md) guide to get started.
 
-
-## 🙏 Acknowledgements
-
-A massive shoutout to [Name](profile_link) and all our wonderful contributors.
 
 ## 📃 License
 
@@ -217,7 +213,7 @@ Spycular is under the Apache 2.0 License. Delve into [LICENSE.md](./LICENSE.md) 
 
 ## 📞 Contact
 
-Queries? Suggestions? Drop us an email at [ionesiojr@gmail.com](mailto:ionesiojr@gmail.com).
+Queries? Suggestions? Drop me an email at [ionesiojr@gmail.com](mailto:ionesiojr@gmail.com).
 
 ## 🎉 Special Thanks
 
