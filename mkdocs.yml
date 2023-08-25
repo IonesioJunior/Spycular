@@ -32,10 +32,11 @@ repo_url: https://github.com/IonesioJunior/Spycular
 
 plugins:
 - mkdocstrings
+- offline
 
 nav:
 - Homepage:
-  - Description: home/description.md
+  - Description: index.md
   - Getting Started: home/getting_started.md
 - tutorials.md
 - How-To Guides: how-to-guides.md
@@ -51,12 +52,11 @@ nav:
     - Reflected: modules/reflection/reflected.md
   - Pointer:
     - ObjectPointer: modules/pointer/obj_pointer.md
-    - CallablePointer: modules/pointer/callale_pointer.md
+    - CallablePointer: modules/pointer/callable_pointer.md
     - ClassPointer: modules/pointer/class_pointer.md
   - Store:
     - AbstractStore: modules/store/abstract_store.md
     - VirtualStore: modules/store/virtual_store.md
-- explanation.md
 
 
 extra:

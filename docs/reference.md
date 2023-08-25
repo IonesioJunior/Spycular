@@ -1,1 +1,0 @@
-::: spycular.store.abstract
