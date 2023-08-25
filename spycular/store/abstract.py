@@ -35,6 +35,15 @@ class AbstractStore(metaclass=ABCMeta):
         """
 
     @abstractmethod
+    def get_all(self, page_index: int = 0, page_size: int = 0) -> Any:
+        """Retrieve the entire store.
+
+        Args:
+            page_index: The index of the page to retrieve.
+            page_size: The number of items on each page.
+        """
+
+    @abstractmethod
     def get(self, obj_id: str) -> Any:
         """Retrieve an object from the store by its ID.
 
@@ -63,3 +72,15 @@ class AbstractStore(metaclass=ABCMeta):
         Returns:
             bool: True if the object exists in the store, otherwise False.
         """
+
+    @staticmethod
+    def validate_pagination(
+        page_index: int,
+        page_size: int,
+        store_size: int,
+    ) -> bool:
+        valid_parameters = page_index >= 0 and page_size >= 0
+        start = page_index * page_size
+        end = start + page_size
+        valid_range = start <= store_size and end <= store_size
+        return valid_parameters and valid_range

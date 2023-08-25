@@ -340,7 +340,14 @@ class GetPointer(Pointer):
     """A specialized pointer that requests or fetches a target object
     based on its ID."""
 
-    def __init__(self, target_id: str, path: str = "", pointer_id: str = ""):
+    def __init__(
+        self,
+        target_id: str = "",
+        path: str = "",
+        pointer_id: str = "",
+        page_index: int = 0,
+        page_size: int = 0,
+    ):
         """Initialize a GetPointer.
 
         Args:
@@ -350,6 +357,8 @@ class GetPointer(Pointer):
         """
         super().__init__(path, pointer_id)
         self.target_id = target_id
+        self.page_index = page_index
+        self.page_size = page_size
 
     def solve(
         self,
@@ -363,9 +372,11 @@ class GetPointer(Pointer):
         This method aims to resolve the object pointed by this GetPointer.
         This is how each pointer in our stack knows how to solve themselves.
 
-        In case of GetPointer, we'll try to retrieve the object from the
-        storage. If it's not there, we'll try to retrieve the object
-        pointed by this GetPointer.
+        In case of GetPointer, this pointer works in two different ways
+        First if it has target_id, then we look at this specific id in our
+        storage, if it's there, we return it by reply_callback. If it doesn't
+        have target_id, then we return all the objects (paginating or not) in
+        our storage by reply_callback.
 
         Args:
             lib (ModuleType): The module the consumer is reflecting.
@@ -376,8 +387,16 @@ class GetPointer(Pointer):
         Returns:
             None | Any: The object pointed by this Object Pointer.
         """
-        if storage and storage.has(self.target_id) and reply_callback:
-            reply_callback(self.target_id, storage.get(self.target_id))
+        if storage and reply_callback:
+            if self.target_id and storage.has(self.target_id):
+                reply_callback(self.target_id, storage.get(self.target_id))
+            elif self.target_id and not storage.has(self.target_id):
+                pass
+            else:
+                reply_callback(
+                    self.id,
+                    storage.get_all(self.page_index, self.page_size),
+                )
         return None
 
 

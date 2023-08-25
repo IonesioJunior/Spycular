@@ -31,6 +31,28 @@ class VirtualStore(AbstractStore):
         """
         return self.store.get(obj_id, None)
 
+    def get_all(self, page_index: int = 0, page_size: int = 0) -> Any:
+        """Retrieve the entire store.
+
+        Args:
+            page_index: The index of the page to retrieve.
+            page_size: The number of items on each page.
+        """
+        store_len = len(self.store)
+        if page_size:
+            if not AbstractStore.validate_pagination(
+                page_index=page_index,
+                page_size=page_size,
+                store_size=store_len,
+            ):
+                return {}
+            results = list(self.store.items())
+            start = page_index * page_size
+            end = start + page_size
+            return {key: value for key, value in results[start:end]}
+        else:
+            return self.store
+
     def save(self, obj_id: str, obj: Any):
         """Store an object in the store with a given ID.
 
