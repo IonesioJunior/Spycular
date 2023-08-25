@@ -1,0 +1,72 @@
+site_name: Spycular
+theme:
+  name: material
+  features:
+  - navigation.sections
+  - navigation.expand
+  - navigation.tabs
+  - content.tabs.link
+  - content.code.annotation
+  - content.code.copy
+  language: en
+  palette:
+  - scheme: default
+    toggle:
+      icon: material/weather-night
+      name: Switch to dark mode
+    primary: teal
+    accent: purple
+  - scheme: slate
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to light mode
+    primary: teal
+    accent: lime
+  icon:
+    repo: fontawesome/brands/github
+
+repo_name: IonesioJunior/Spycular
+repo_url: https://github.com/IonesioJunior/Spycular
+
+
+
+plugins:
+- mkdocstrings
+
+nav:
+- Homepage:
+  - Description: home/description.md
+  - Getting Started: home/getting_started.md
+- tutorials.md
+- How-To Guides: how-to-guides.md
+- Reference:
+  - Consumer:
+    - AbstractConsumer: modules/consumer/abstract_consumer.md
+    - VirtualConsumer: modules/consumer/virtual_consumer.md
+  - Producer:
+    - AbstractProducer: modules/producer/abstract_producer.md
+    - VirtualProducer: modules/producer/virtual_producer.md
+  - Reflection:
+    - Incident: modules/reflection/incident.md
+    - Reflected: modules/reflection/reflected.md
+  - Pointer:
+    - ObjectPointer: modules/pointer/obj_pointer.md
+    - CallablePointer: modules/pointer/callale_pointer.md
+    - ClassPointer: modules/pointer/class_pointer.md
+  - Store:
+    - AbstractStore: modules/store/abstract_store.md
+    - VirtualStore: modules/store/virtual_store.md
+- explanation.md
+
+
+extra:
+  social:
+  - icon: fontawesome/brands/github-alt
+    link: https://github.com/IonesioJunior
+  - icon: fontawesome/brands/linkedin
+    link: https://br.linkedin.com/in/ionesio-junior
+  version:
+    provider: mike
+
+copyright: |
+  &copy; 2023 <a href="https://github.com/IonesioJunior"  target="_blank" rel="noopener">Ionesio Junior</a>

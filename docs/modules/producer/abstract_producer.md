@@ -1,0 +1,1 @@
+::: spycular.producer.abstract
