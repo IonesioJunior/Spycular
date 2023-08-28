@@ -372,7 +372,7 @@ class GetPointer(Pointer):
         This method aims to resolve the object pointed by this GetPointer.
         This is how each pointer in our stack knows how to solve themselves.
 
-        In case of GetPointer, this pointer works in two different ways
+        In case of GetPointer, this pointer works in two different ways.
         First if it has target_id, then we look at this specific id in our
         storage, if it's there, we return it by reply_callback. If it doesn't
         have target_id, then we return all the objects (paginating or not) in

@@ -1,5 +1,7 @@
 site_name: Spycular
 theme:
+  logo: assets/spycular.png
+  favicon: assets/spycular.png
   name: material
   features:
   - navigation.sections
@@ -36,7 +38,7 @@ plugins:
 
 nav:
 - Homepage:
-  - Description: index.md
+  - Welcome to Spycular!: index.md
   - Getting Started: home/getting_started.md
 - tutorials.md
 - How-To Guides: how-to-guides.md
