@@ -115,7 +115,7 @@ files = [
 name = "cffi"
 version = "1.15.1"
 description = "Foreign Function Interface for Python calling C code."
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "cffi-1.15.1-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:a66d3508133af6e8548451b25058d5812812ec3798c886bf38ed24a98216fab2"},
@@ -562,7 +562,7 @@ pyflakes = ">=3.1.0,<3.2.0"
 name = "gevent"
 version = "23.7.0"
 description = "Coroutine-based network library"
-optional = false
+optional = true
 python-versions = ">=3.8"
 files = [
     {file = "gevent-23.7.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:add904a7ef960cd4e133e61eb7413982c5e4203928160be1c09752ac06a25e71"},
@@ -635,7 +635,7 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 name = "greenlet"
 version = "2.0.2"
 description = "Lightweight in-process concurrent programming"
-optional = false
+optional = true
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 files = [
     {file = "greenlet-2.0.2-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:bdfea8c661e80d3c1c99ad7c3ff74e6e87184895bbaca6ee8cc61209f8b9b85d"},
@@ -708,7 +708,7 @@ test = ["objgraph", "psutil"]
 name = "greenlet"
 version = "3.0.0a1"
 description = "Lightweight in-process concurrent programming"
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "greenlet-3.0.0a1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:a8dd92fd76a61af2abc8ccad0c6c6069b3c4ebd4727ecc9a7c33aae37651c8c7"},
@@ -1680,7 +1680,7 @@ files = [
 name = "pycparser"
 version = "2.21"
 description = "C parser in Python"
-optional = false
+optional = true
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 files = [
     {file = "pycparser-2.21-py2.py3-none-any.whl", hash = "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9"},
@@ -2408,7 +2408,7 @@ watchmedo = ["PyYAML (>=3.10)"]
 name = "websocket"
 version = "0.2.1"
 description = "Websocket implementation for gevent"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "websocket-0.2.1.tar.gz", hash = "sha256:42b506fae914ac5ed654e23ba9742e6a342b1a1c3eb92632b6166c65256469a4"},
@@ -2515,7 +2515,7 @@ test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
 name = "zope-event"
 version = "5.0"
 description = "Very basic event publishing system"
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "zope.event-5.0-py3-none-any.whl", hash = "sha256:2832e95014f4db26c47a13fdaef84cef2f4df37e66b59d8f1f4a8f319a632c26"},
@@ -2533,7 +2533,7 @@ test = ["zope.testrunner"]
 name = "zope-interface"
 version = "6.0"
 description = "Interfaces for Python"
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "zope.interface-6.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:f299c020c6679cb389814a3b81200fe55d428012c5e76da7e722491f5d205990"},
@@ -2582,9 +2582,9 @@ cython = ["cython"]
 numpy = ["numpy", "pyarrow"]
 test = []
 torch = ["numpy", "pyarrow", "torch"]
-websocket = ["websockets"]
+websocket = ["websocket", "websockets"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "7e8f63a8535866992f46475de58059c4e8e1bf5c712b942f799e701503c4c35e"
+content-hash = "ecdd6bfb01d43cf3ef1889a04b2c2c18c91b342c60178e53c1d83d822739c067"
