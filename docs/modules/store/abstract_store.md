@@ -1,1 +1,1 @@
-::: spycular.store.virtual_store
+::: spycular.store.abstract

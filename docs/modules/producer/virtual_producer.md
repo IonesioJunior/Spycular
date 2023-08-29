@@ -1,1 +1,1 @@
-::: spycular.producer.virtual_producer
+::: spycular.producer.virtual

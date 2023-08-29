@@ -1,1 +1,1 @@
-::: spycular.consumer.virtual_consumer
+::: spycular.consumer.virtual
