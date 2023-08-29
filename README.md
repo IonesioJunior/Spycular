@@ -1,4 +1,9 @@
-# Spycular: Reflecting local module calls in remote devices!
+<div align="right" style='margin-bottom: 10px'>
+<img alt="PyPI - Version" src="https://img.shields.io/pypi/v/spycular">
+<img alt="PyPI - License" src="https://img.shields.io/pypi/l/spycular">
+<a href='https://ionesiojunior.github.io/Spycular/'><img alt="Docs Badge" src="https://img.shields.io/badge/docs-available-green"></a>
+</div>
+
 <p align="center"><img src = "./docs/assets/spycular_header.png"></p>
 
 ## Description
