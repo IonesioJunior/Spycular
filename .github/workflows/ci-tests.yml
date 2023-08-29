@@ -20,6 +20,16 @@ jobs:
       with:
         poetry-version: ${{ matrix.poetry-version }}
     - name: Install dependencies
-      run: poetry install -E capnp -E numpy -E torch
+      run: poetry install -E capnp -E numpy -E torch -E ws
     - name: Run unit tests
-      run: poetry run pytest
+      run: poetry run pytest -xr test/ --deselect=test/ws_integration/
+    - name: Run Numpy Websocket Integration tests
+      run: |
+        poetry run start_tst_server numpy ws &
+        poetry run pytest  -x test/ws_integration/numpy_integration
+        poetry run stop_tst_server
+    - name: Run Torch Websocket Integration tests
+      run: |
+        poetry run start_tst_server torch ws &
+        poetry run pytest  -x test/ws_integration/torch_integration
+        poetry run stop_tst_server
