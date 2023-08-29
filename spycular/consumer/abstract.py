@@ -32,16 +32,18 @@ class AbstractConsumer(metaclass=ABCMeta):
         """
         self.reflected_module = ReflectedModule(module)
 
-    @abstractmethod
-    def execute(self, ptr: Pointer) -> None:
-        """Abstract method to execute operations on the given pointer.
+    def execute(self, ptr: Pointer):
+        """Execute operations on the given pointer using the reflected
+        module.
 
         Args:
             ptr (Pointer): Pointer instance pointing to a specific resource.
-
-        Returns:
-            None
         """
+        self.reflected_module.execute(
+            pointer=ptr,
+            storage=self.storage,
+            reply_callback=self.reply,
+        )
 
     @abstractmethod
     async def execute_graph(self, ptr: PointerGraph) -> None:
