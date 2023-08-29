@@ -1,5 +1,5 @@
 from spycular.pointer.object_pointer import GetPointer
-from spycular.store.virtual_store import VirtualStore
+from spycular.store.virtual import VirtualStore
 
 
 def test_create_virtual_store():

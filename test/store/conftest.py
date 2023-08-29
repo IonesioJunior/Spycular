@@ -2,9 +2,9 @@ import pytest
 
 local_numpy = pytest.importorskip("numpy")
 from spycular import reflect, strike  # noqa: E402
-from spycular.consumer.virtual_consumer import VirtualConsumer  # noqa: E402
-from spycular.producer.virtual_producer import VirtualProducer  # noqa: E402
-from spycular.store.virtual_store import VirtualStore  # noqa: E402
+from spycular.consumer.virtual import VirtualConsumer  # noqa: E402
+from spycular.producer.virtual import VirtualProducer  # noqa: E402
+from spycular.store.virtual import VirtualStore  # noqa: E402
 
 message_queue = []
 reply_queue = {}
