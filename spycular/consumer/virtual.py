@@ -1,6 +1,5 @@
 from typing import Any
 
-from ..pointer.abstract import Pointer
 from ..pointer.graph.abstract import PointerGraph
 from .abstract import AbstractConsumer
 
@@ -45,19 +44,6 @@ class VirtualConsumer(AbstractConsumer):
         while len(self.message_queue):
             graph = self.message_queue.pop(0)
             await self.execute_graph(graph)
-
-    def execute(self, ptr: Pointer):
-        """Execute operations on the given pointer using the reflected
-        module.
-
-        Args:
-            ptr (Pointer): Pointer instance pointing to a specific resource.
-        """
-        self.reflected_module.execute(
-            pointer=ptr,
-            storage=self.storage,
-            reply_callback=self.reply,
-        )
 
     async def execute_graph(self, graph: PointerGraph) -> None:
         """Asynchronously execute operations on a given pointer graph
