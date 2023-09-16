@@ -102,7 +102,7 @@ class ReflectedModule:
                         reply_callback=reply_callback,
                     ),
                 )
-            elif isinstance(arg, Iterable):
+            elif isinstance(arg, Iterable) and not isinstance(arg, str):
                 new_args = []
                 for argument in arg:
                     if isinstance(argument, Pointer):  # if arg is a pointer

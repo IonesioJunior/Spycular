@@ -28,6 +28,7 @@ class ObjectPointer(Pointer):
         broker: Any = None,
         target_id=None,
         register=False,
+        class_attribute=False,
     ):
         """Initialize an ObjectPointer.
 
@@ -44,6 +45,7 @@ class ObjectPointer(Pointer):
         self.broker = broker
         self.__registered = register
         self.target_id = target_id
+        self.class_attribute = class_attribute
 
     @property
     def args(self) -> tuple[Any, ...]:
@@ -97,6 +99,9 @@ class ObjectPointer(Pointer):
         Returns:
             ObjectPointer: A new ObjectPointer associated with the action.
         """
+        if self.class_attribute and self.path != path:
+            path = f"{self.path}.{path}"
+
         obj_action = ObjectActionPointer(
             target_id=self.target_id if self.target_id else self.id,
             path=path,
@@ -480,7 +485,6 @@ class ObjectActionPointer(Pointer):
                 obj = storage.get(self.target_id)
 
             attributes = self.path.split(".")
-
             # Parse the entire path using obj as root
             for attr in attributes[:-1]:
                 obj = getattr(obj, attr)
