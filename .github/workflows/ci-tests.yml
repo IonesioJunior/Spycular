@@ -33,3 +33,7 @@ jobs:
         poetry run start_tst_server torch ws &
         poetry run pytest  -x test/ws_integration/torch_integration
         poetry run stop_tst_server
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
