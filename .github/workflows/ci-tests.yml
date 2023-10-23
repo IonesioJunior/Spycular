@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: poetry install -E capnp -E numpy -E torch -E websocket
     - name: Run unit tests
-      run: poetry run pytest --cov=spycular -xr test/ --deselect=test/ws_integration/
+      run: poetry run pytest --cov=spycular --cov-report xml -xr test/ --deselect=test/ws_integration/
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
