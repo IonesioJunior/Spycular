@@ -22,11 +22,17 @@ jobs:
     - name: Install dependencies
       run: poetry install -E capnp -E numpy -E torch -E websocket
     - name: Run unit tests
-      run: poetry run pytest -xr test/ --deselect=test/ws_integration/
+      run: poetry run pytest --cov=spycular --cov-report xml -xr test/ --deselect=test/ws_integration/
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        file: ./coverage.xml
     - name: Run Numpy Websocket Integration tests
       run: |
         poetry run start_tst_server numpy ws &
-        poetry run pytest  -x test/ws_integration/numpy_integration
+        poetry run pytest -x test/ws_integration/numpy_integration
         poetry run stop_tst_server
     - name: Run Torch Websocket Integration tests
       run: |
